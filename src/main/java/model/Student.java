@@ -1,6 +1,6 @@
 package model;
-import jakarta.persistence.*;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -11,33 +11,36 @@ public class Student {
     @Column(name = "StudentId", length = 20)
     private String studentId;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "FullName", nullable = false, length = 100)
     private String fullName;
 
+    @Column(name = "Birthday")
     private LocalDate birthday;
 
-    private Boolean gender; // 1: Nam, 0: Nữ
+    @Column(name = "Gender")
+    private Boolean gender; // true: Nam, false: Nữ
 
-    @Column(length = 15)
+    @Column(name = "Phone", length = 15)
     private String phone;
 
-    @Column(length = 50)
+    @Column(name = "Rank", length = 50)
     private String rank;
 
+    // Một Student có thể có nhiều Enrollment
     @OneToMany(mappedBy = "student")
     private List<Enrollment> enrollments;
 
-    public Student(String studentId, List<Enrollment> enrollments, String rank, String phone, Boolean gender, LocalDate birthday, String fullName) {
-        this.studentId = studentId;
+    public Student() {
+    }
+
+    public Student(List<Enrollment> enrollments, String rank, String phone, Boolean gender, LocalDate birthday, String fullName, String studentId) {
         this.enrollments = enrollments;
         this.rank = rank;
         this.phone = phone;
         this.gender = gender;
         this.birthday = birthday;
         this.fullName = fullName;
-    }
-
-    public Student() {
+        this.studentId = studentId;
     }
 
     public String getStudentId() {
@@ -48,20 +51,20 @@ public class Student {
         this.studentId = studentId;
     }
 
-    public List<Enrollment> getEnrollments() {
-        return enrollments;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setEnrollments(List<Enrollment> enrollments) {
-        this.enrollments = enrollments;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
-    public String getRank() {
-        return rank;
+    public LocalDate getBirthday() {
+        return birthday;
     }
 
-    public void setRank(String rank) {
-        this.rank = rank;
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
     }
 
     public String getPhone() {
@@ -80,20 +83,19 @@ public class Student {
         this.gender = gender;
     }
 
-    public LocalDate getBirthday() {
-        return birthday;
+    public List<Enrollment> getEnrollments() {
+        return enrollments;
     }
 
-    public void setBirthday(LocalDate birthday) {
-        this.birthday = birthday;
+    public void setEnrollments(List<Enrollment> enrollments) {
+        this.enrollments = enrollments;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getRank() {
+        return rank;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setRank(String rank) {
+        this.rank = rank;
     }
-// Getters và Setters
 }

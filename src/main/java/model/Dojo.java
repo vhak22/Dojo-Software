@@ -1,8 +1,6 @@
 package model;
 
-
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
@@ -12,31 +10,34 @@ public class Dojo {
     @Column(name = "DojoId", length = 20)
     private String dojoId;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "Name", nullable = false, length = 100)
     private String name;
 
-    @Column(length = 255)
+    @Column(name = "Address", length = 255)
     private String address;
 
+    // QUAN TRỌNG: Mapping khóa ngoại MasterId sang Object User
     @ManyToOne
     @JoinColumn(name = "MasterId")
     private User master;
 
+    @Column(name = "Active")
     private Boolean active = true;
 
+    // Một Dojo có nhiều lượt Enrollment
     @OneToMany(mappedBy = "dojo")
     private List<Enrollment> enrollments;
 
     public Dojo() {
     }
 
-    public Dojo(User master, List<Enrollment> enrollments, Boolean active, String address, String name, String dojoId) {
-        this.master = master;
+    public Dojo(String dojoId, List<Enrollment> enrollments, Boolean active, User master, String address, String name) {
+        this.dojoId = dojoId;
         this.enrollments = enrollments;
         this.active = active;
+        this.master = master;
         this.address = address;
         this.name = name;
-        this.dojoId = dojoId;
     }
 
     public String getDojoId() {
@@ -47,12 +48,12 @@ public class Dojo {
         this.dojoId = dojoId;
     }
 
-    public List<Enrollment> getEnrollments() {
-        return enrollments;
+    public User getMaster() {
+        return master;
     }
 
-    public void setEnrollments(List<Enrollment> enrollments) {
-        this.enrollments = enrollments;
+    public void setMaster(User master) {
+        this.master = master;
     }
 
     public Boolean getActive() {
@@ -61,14 +62,6 @@ public class Dojo {
 
     public void setActive(Boolean active) {
         this.active = active;
-    }
-
-    public User getMaster() {
-        return master;
-    }
-
-    public void setMaster(User master) {
-        this.master = master;
     }
 
     public String getAddress() {
@@ -86,5 +79,12 @@ public class Dojo {
     public void setName(String name) {
         this.name = name;
     }
-// Getters và Setters
+
+    public List<Enrollment> getEnrollments() {
+        return enrollments;
+    }
+
+    public void setEnrollments(List<Enrollment> enrollments) {
+        this.enrollments = enrollments;
+    }
 }

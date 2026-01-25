@@ -1,7 +1,6 @@
 package model;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 
 @Entity
@@ -11,21 +10,21 @@ public class Enrollment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    // QUAN TRỌNG: Khóa ngoại StudentId
     @ManyToOne
     @JoinColumn(name = "StudentId")
     private Student student;
 
+    // QUAN TRỌNG: Khóa ngoại DojoId
     @ManyToOne
     @JoinColumn(name = "DojoId")
     private Dojo dojo;
 
+    @Column(name = "EnrollDate")
     private LocalDate enrollDate = LocalDate.now();
 
-    @Column(length = 50)
+    @Column(name = "Status", length = 50)
     private String status;
-
-    public Enrollment() {
-    }
 
     public Enrollment(Integer id, String status, LocalDate enrollDate, Dojo dojo, Student student) {
         this.id = id;
@@ -33,6 +32,9 @@ public class Enrollment {
         this.enrollDate = enrollDate;
         this.dojo = dojo;
         this.student = student;
+    }
+
+    public Enrollment() {
     }
 
     public Integer getId() {
@@ -43,20 +45,20 @@ public class Enrollment {
         this.id = id;
     }
 
-    public LocalDate getEnrollDate() {
-        return enrollDate;
-    }
-
-    public void setEnrollDate(LocalDate enrollDate) {
-        this.enrollDate = enrollDate;
-    }
-
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public LocalDate getEnrollDate() {
+        return enrollDate;
+    }
+
+    public void setEnrollDate(LocalDate enrollDate) {
+        this.enrollDate = enrollDate;
     }
 
     public Dojo getDojo() {
@@ -74,5 +76,4 @@ public class Enrollment {
     public void setStudent(Student student) {
         this.student = student;
     }
-// Getters và Setters
 }

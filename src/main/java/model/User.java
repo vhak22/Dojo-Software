@@ -1,7 +1,7 @@
 package model;
 
 import jakarta.persistence.*;
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -11,34 +11,42 @@ public class User {
     @Column(name = "UserId", length = 20)
     private String userId;
 
-    @Column(nullable = false, length = 20)
+    @Column(name = "Password", nullable = false, length = 100)
     private String password;
 
-    @Column(length = 100)
+    @Column(name = "Fullname", length = 100)
     private String fullname;
 
-    @Column(length = 100)
+    @Column(name = "Email", unique = true, length = 100)
     private String email;
 
-    @Column(length = 20)
-    private String role = "Staff";
+    // QUAN TRỌNG: Mapping khóa ngoại RoleId sang Object Role
+    @ManyToOne
+    @JoinColumn(name = "RoleId")
+    private Role role;
 
+    @Column(name = "Active")
     private Boolean active = true;
 
+    @Column(name = "Created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    // Một Master (User) có thể quản lý nhiều Dojo
     @OneToMany(mappedBy = "master")
     private List<Dojo> managedDojos;
 
-    public User() {
-    }
-
-    public User(String userId, String password, String fullname, String email, String role, Boolean active, List<Dojo> managedDojos) {
-        this.userId = userId;
-        this.password = password;
-        this.fullname = fullname;
-        this.email = email;
+    public User(List<Dojo> managedDojos, LocalDateTime createdAt, Role role, Boolean active, String email, String fullname, String password, String userId) {
+        this.managedDojos = managedDojos;
+        this.createdAt = createdAt;
         this.role = role;
         this.active = active;
-        this.managedDojos = managedDojos;
+        this.email = email;
+        this.fullname = fullname;
+        this.password = password;
+        this.userId = userId;
+    }
+
+    public User() {
     }
 
     public String getUserId() {
@@ -49,36 +57,20 @@ public class User {
         this.userId = userId;
     }
 
-    public String getPassword() {
-        return password;
+    public List<Dojo> getManagedDojos() {
+        return managedDojos;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setManagedDojos(List<Dojo> managedDojos) {
+        this.managedDojos = managedDojos;
     }
 
-    public String getFullname() {
-        return fullname;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Boolean getActive() {
@@ -89,12 +81,35 @@ public class User {
         this.active = active;
     }
 
-    public List<Dojo> getManagedDojos() {
-        return managedDojos;
+    public Role getRole() {
+        return role;
     }
 
-    public void setManagedDojos(List<Dojo> managedDojos) {
-        this.managedDojos = managedDojos;
+    public void setRole(Role role) {
+        this.role = role;
     }
-// Getters và Setters
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

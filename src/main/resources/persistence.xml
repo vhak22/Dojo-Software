@@ -4,12 +4,12 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
 
-    <persistence-unit name="PolyOELab3">
+    <persistence-unit name="Dojo">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
             <property name="jakarta.persistence.jdbc.url"
-                      value="jdbc:sqlserver://localhost:1433;databaseName=PolyOELab3;encrypt=true;trustServerCertificate=true;sendStringParametersAsUnicode=true"/>
+                      value="jdbc:sqlserver://localhost:1433;databaseName=Dojo;encrypt=true;trustServerCertificate=true;sendStringParametersAsUnicode=true"/>
             <property name="jakarta.persistence.jdbc.user" value="sa"/>
             <property name="jakarta.persistence.jdbc.password" value="123"/>
 
