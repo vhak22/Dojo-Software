@@ -20,7 +20,6 @@ public class User {
     @Column(name = "Email", unique = true, length = 100)
     private String email;
 
-    // QUAN TRỌNG: Mapping khóa ngoại RoleId sang Object Role
     @ManyToOne
     @JoinColumn(name = "RoleId")
     private Role role;
@@ -111,5 +110,12 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean hasRole(Role.RoleName roleNameToCheck) {
+        if (this.role == null || this.role.getRoleName() == null) {
+            return false;
+        }
+        return this.role.getRoleName() == roleNameToCheck;
     }
 }

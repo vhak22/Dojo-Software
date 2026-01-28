@@ -10,8 +10,15 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    public enum RoleName {
+        ADMIN,
+        MASTER,
+        STAFF
+    }
+
     @Column(name = "RoleName", nullable = false, length = 50, unique = true)
-    private String roleName;
+    @Enumerated(EnumType.ORDINAL)
+    private RoleName roleName;
 
     @Column(name = "Description", length = 255)
     private String description;
@@ -22,20 +29,12 @@ public class Role {
 
     public Role() {
     }
-    public Role(String roleName, String description) {
-        this.roleName = roleName;
-        this.description = description;
-    }
 
-
-    // Getters và Setters
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
+    public Role(Integer id, List<User> users, String description, RoleName roleName) {
+        this.id = id;
         this.users = users;
+        this.description = description;
+        this.roleName = roleName;
     }
 
     public Integer getId() {
@@ -46,12 +45,12 @@ public class Role {
         this.id = id;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public List<User> getUsers() {
+        return users;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     public String getDescription() {
@@ -60,5 +59,13 @@ public class Role {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public RoleName getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(RoleName roleName) {
+        this.roleName = roleName;
     }
 }

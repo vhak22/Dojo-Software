@@ -66,7 +66,10 @@ INSERT INTO Roles (RoleName, Description) VALUES
 (N'Master', N'Võ sư chủ nhiệm - Quản lý võ đường và nhân sự'),
 (N'Staff', N'Nhân viên văn phòng/Lễ tân - Quản lý ghi danh và thu phí');
 GO
-
+-- Cập nhật dữ liệu để khớp với Enum Java (ADMIN, MASTER, STAFF)
+UPDATE Roles SET RoleName = 'ADMIN' WHERE RoleName = 'Admin';
+UPDATE Roles SET RoleName = 'MASTER' WHERE RoleName = 'Master';
+UPDATE Roles SET RoleName = 'STAFF' WHERE RoleName = 'Staff';
 -- =============================================
 -- 2. INSERT DATA: USERS
 -- =============================================

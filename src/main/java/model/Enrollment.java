@@ -24,9 +24,6 @@ public class Enrollment {
     private LocalDate enrollDate = LocalDate.now();
 
     public enum EnrollmentStatus {
-        // Thứ tự khai báo RẤT QUAN TRỌNG vì JPA sẽ dùng số thứ tự (Ordinal) để lưu vào DB
-        // DROPPED có index = 0, ACTIVE = 1, ... khớp hoàn toàn với quy ước trong SQL của bạn.
-
         DROPPED,    // 0: Nghỉ hẳn
         ACTIVE,     // 1: Đang tập
         TRIAL,      // 2: Học thử
