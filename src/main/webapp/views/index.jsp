@@ -1,8 +1,8 @@
-<!-- <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page isELIgnored="false" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %> -->
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -12,7 +12,7 @@
     <title>Vovinam Thu Duc</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto:wght@400;500&display=swap"
         rel="stylesheet">
 
@@ -26,7 +26,7 @@
         /* 1. HEADER STYLE */
         .navbar-custom {
             /* Hiệu ứng xuyên thấu Gradient: Đen đậm ở trên -> Trong suốt ở dưới */
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0) 100%);
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.5) 100%);
             padding: 20px 0;
             transition: all 0.3s ease;
         }
@@ -89,7 +89,7 @@
         .hero-section {
             height: 100vh;
             /* Ảnh nền võ thuật */
-            background: url('./images/backgroundIndex.jpg') no-repeat center center/cover;
+            background: url('${pageContext.request.contextPath}/views/images/backgroundIndex.jpg') no-repeat center center/cover;
             position: relative;
             display: flex;
             align-items: center;
@@ -304,7 +304,7 @@
             min-height: 500px;
             /* Chiều cao tối thiểu trên mobile */
             /* Thay đường dẫn ảnh của bạn vào đây */
-            background: url('./images/FAQ.jpg') no-repeat center center/cover;
+            background: url('${pageContext.request.contextPath}/views/images/FAQ.jpg') no-repeat center center/cover;
             /* Hiệu ứng đen trắng cho ảnh giống hình mẫu */
             filter: grayscale(100%);
         }
@@ -493,6 +493,154 @@
             </div>
         </div>
     </section>
+    <section id="locations" class="py-5" style="background-color: #050505;">
+        <div class="container">
+
+            <div class="row mb-5 align-items-end">
+                <div class="col-lg-6 col-md-12 mb-3 mb-lg-0">
+                    <h2 class="text-uppercase fw-bold text-white mb-2" style="font-family: 'Oswald', sans-serif;">
+                        Hệ Thống <span style="color: #ff6600;">Câu Lạc Bộ</span>
+                    </h2>
+                    <p class="text-white-50 m-0">Tìm câu lạc bộ gần bạn nhất để bắt đầu tập luyện.</p>
+                </div>
+
+                <div class="col-lg-6 col-md-12">
+                    <form action="SearchLocationServlet" method="GET" class="d-flex" role="search">
+                        <input class="form-control form-control-lg me-2 bg-dark text-white border-secondary"
+                            type="search" name="keyword" placeholder="Nhập tên quận, đường..." aria-label="Search"
+                            value="${param.keyword}"> <button class="btn btn-custom text-nowrap" type="submit">
+                            Tìm Kiếm
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row g-4">
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 bg-dark text-white border-secondary shadow-sm">
+                        <div style="height: 200px; overflow: hidden;">
+                            <img src="https://via.placeholder.com/400x250/333/fff?text=Co+So+Thu+Duc"
+                                class="card-img-top w-100 h-100 object-fit-cover" alt="Vovinam Thủ Đức">
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <div class="mb-2">
+                                <span class="badge bg-success">Đang mở cửa</span>
+                                <span class="badge border border-secondary text-white-50 ms-1">Quận Thủ Đức</span>
+                            </div>
+
+                            <h4 class="card-title text-uppercase fw-bold mt-2"
+                                style="font-family: 'Oswald', sans-serif;">
+                                CLB Vovinam Thủ Đức
+                            </h4>
+
+                            <p class="card-text text-white-50 small flex-grow-1">
+                                <i class="me-2">📍</i> 215 Đường số 8, Phường Linh Xuân, TP. Thủ Đức.
+                                <br>
+                                <i class="me-2">📞</i> 0909 123 456
+                            </p>
+
+                            <hr class="border-secondary">
+
+                            <div class="d-grid gap-2">
+                                <a href="LocationDetailServlet?id=1" class="btn btn-outline-light btn-sm">Xem lịch
+                                    tập</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 bg-dark text-white border-secondary shadow-sm">
+                        <div style="height: 200px; overflow: hidden;">
+                            <img src="https://via.placeholder.com/400x250/444/fff?text=Co+So+Quan+9"
+                                class="card-img-top w-100 h-100 object-fit-cover" alt="Vovinam Quận 9">
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <div class="mb-2">
+                                <span class="badge bg-warning text-dark">Sắp khai trương</span>
+                                <span class="badge border border-secondary text-white-50 ms-1">Quận 9</span>
+                            </div>
+
+                            <h4 class="card-title text-uppercase fw-bold mt-2"
+                                style="font-family: 'Oswald', sans-serif;">
+                                Vovinam Lê Văn Việt
+                            </h4>
+
+                            <p class="card-text text-white-50 small flex-grow-1">
+                                <i class="me-2">📍</i> 450 Lê Văn Việt, Phường Tăng Nhơn Phú A, Quận 9.
+                                <br>
+                                <i class="me-2">📞</i> 0908 888 999
+                            </p>
+
+                            <hr class="border-secondary">
+
+                            <div class="d-grid gap-2">
+                                <a href="LocationDetailServlet?id=2" class="btn btn-outline-light btn-sm">Xem lịch
+                                    tập</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 bg-dark text-white border-secondary shadow-sm">
+                        <div style="height: 200px; overflow: hidden;">
+                            <img src="https://via.placeholder.com/400x250/555/fff?text=Co+So+Binh+Thanh"
+                                class="card-img-top w-100 h-100 object-fit-cover" alt="Vovinam Bình Thạnh">
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <div class="mb-2">
+                                <span class="badge bg-danger">Đang bảo trì</span>
+                                <span class="badge border border-secondary text-white-50 ms-1">Bình Thạnh</span>
+                            </div>
+
+                            <h4 class="card-title text-uppercase fw-bold mt-2"
+                                style="font-family: 'Oswald', sans-serif;">
+                                Vovinam Hàng Xanh
+                            </h4>
+
+                            <p class="card-text text-white-50 small flex-grow-1">
+                                <i class="me-2">📍</i> 12 Điện Biên Phủ, Phường 25, Quận Bình Thạnh.
+                                <br>
+                                <i class="me-2">📞</i> 0912 345 678
+                            </p>
+
+                            <hr class="border-secondary">
+
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-secondary btn-sm" disabled>Tạm ngưng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row mt-5">
+                <div class="col-12 d-flex justify-content-center">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination pagination-dark">
+                            <li class="page-item disabled"><a class="page-link bg-dark border-secondary text-white-50"
+                                    href="#">Trước</a></li>
+                            <li class="page-item active"><a class="page-link bg-primary border-primary text-white"
+                                    href="#">1</a></li>
+                            <li class="page-item"><a class="page-link bg-dark border-secondary text-white"
+                                    href="#">2</a></li>
+                            <li class="page-item"><a class="page-link bg-dark border-secondary text-white"
+                                    href="#">3</a></li>
+                            <li class="page-item"><a class="page-link bg-dark border-secondary text-white"
+                                    href="#">Sau</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+        </div>
+        <br><br>
+    </section>
     <section id="faq" class="faq-section">
         <div class="container-fluid p-0">
             <div class="row g-0">
@@ -584,6 +732,7 @@
                 </div>
             </div>
         </div>
+        <br><br><br>
     </section>
 
 
@@ -611,7 +760,7 @@
                     {
                         year: 2025,
                         desc: "Năm hiện tại: Mở rộng thêm 2 chi nhánh mới tại Quận 9 và Bình Thạnh. Đưa chương trình đào tạo Vovinam tự vệ thực chiến vào giảng dạy.",
-                        image: "./images/history-2025.jpg"
+                        image: "${pageContext.request.contextPath}/views/images/history-2025.jpg"
                     },
                     {
                         year: 2024,
