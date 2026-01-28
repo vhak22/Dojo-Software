@@ -23,10 +23,25 @@ public class Enrollment {
     @Column(name = "EnrollDate")
     private LocalDate enrollDate = LocalDate.now();
 
-    @Column(name = "Status", length = 50)
-    private String status;
+    public enum EnrollmentStatus {
+        // Thứ tự khai báo RẤT QUAN TRỌNG vì JPA sẽ dùng số thứ tự (Ordinal) để lưu vào DB
+        // DROPPED có index = 0, ACTIVE = 1, ... khớp hoàn toàn với quy ước trong SQL của bạn.
 
-    public Enrollment(Integer id, String status, LocalDate enrollDate, Dojo dojo, Student student) {
+        DROPPED,    // 0: Nghỉ hẳn
+        ACTIVE,     // 1: Đang tập
+        TRIAL,      // 2: Học thử
+        RESERVED,   // 3: Bảo lưu
+        SUSPENDED   // 4: Đình chỉ
+    }
+
+    @Column(name = "Status", nullable = false)
+    @Enumerated(EnumType.ORDINAL)
+    private EnrollmentStatus status;
+
+    public Enrollment() {
+    }
+
+    public Enrollment(Integer id, EnrollmentStatus status, LocalDate enrollDate, Dojo dojo, Student student) {
         this.id = id;
         this.status = status;
         this.enrollDate = enrollDate;
@@ -34,22 +49,11 @@ public class Enrollment {
         this.student = student;
     }
 
-    public Enrollment() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getStatus() {
+    public EnrollmentStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(EnrollmentStatus status) {
         this.status = status;
     }
 
@@ -75,5 +79,13 @@ public class Enrollment {
 
     public void setStudent(Student student) {
         this.student = student;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }
