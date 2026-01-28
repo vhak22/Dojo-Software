@@ -17,7 +17,7 @@ public class Role {
     }
 
     @Column(name = "RoleName", nullable = false, length = 50, unique = true)
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private RoleName roleName;
 
     @Column(name = "Description", length = 255)

@@ -1,7 +1,9 @@
 package dao;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaQuery;
 import utils.XJPA;
 import java.util.List;
 
@@ -90,4 +92,5 @@ public abstract class AbstractDAO<T, K> implements CrudDAO<T, K> {
             em.close();
         }
     }
+
 }
