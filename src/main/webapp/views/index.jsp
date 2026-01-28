@@ -567,63 +567,63 @@
         </div>
         <br><br>
     </section>
-<%--    <section id="master" class="py-5" style="background-color: #050505;">--%>
-<%--        <div class="container">--%>
-<%--            <div class="row mb-5 align-items-end">--%>
-<%--                <div class="col-lg-6 col-md-12 mb-3 mb-lg-0">--%>
-<%--                    <h2 class="text-uppercase fw-bold text-white mb-2" style="font-family: 'Oswald', sans-serif;">--%>
-<%--                        Hệ Thống <span style="color: #ff6600;">Huấn luyện viên</span>--%>
-<%--                    </h2>--%>
-<%--                    <p class="text-white-50 m-0">Đội ngũ huấn luyện viên chuyên nghiệp.</p>--%>
-<%--                </div>--%>
-<%--            </div>--%>
+        <section id="master" class="py-5" style="background-color: #050505;">
+            <div class="container">
+                <div class="row mb-5 align-items-end">
+                    <div class="col-lg-6 col-md-12 mb-3 mb-lg-0">
+                        <h2 class="text-uppercase fw-bold text-white mb-2" style="font-family: 'Oswald', sans-serif;">
+                            Hệ Thống <span style="color: #ff6600;">Huấn luyện viên</span>
+                        </h2>
+                        <p class="text-white-50 m-0">Đội ngũ huấn luyện viên chuyên nghiệp.</p>
+                    </div>
+                </div>
 
-<%--            <div class="row g-4">--%>
-<%--                <div class="row">--%>
-<%--                    <c:forEach var="trainer" items="${trainers}">--%>
+                <div class="row g-4">
+                    <div class="row">
+                        <c:forEach var="trainer" items="${trainers}">
 
-<%--                        <div class="col-md-6 col-lg-4 mb-4">--%>
-<%--                            <div class="card trainer-card h-100 shadow-sm">--%>
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card trainer-card h-100 shadow-sm">
 
-<%--                                <c:choose>--%>
-<%--                                    <c:when test="${not empty trainer.avatar}">--%>
-<%--                                        <img src="${pageContext.request.contextPath}/image/${trainer.avatar}"--%>
-<%--                                             class="card-img-top trainer-avatar" alt="${trainer.fullname}">--%>
-<%--                                    </c:when>--%>
-<%--                                    <c:otherwise>--%>
-<%--                                        <img src="https://ui-avatars.com/api/?name=${trainer.fullname}&background=random&size=250"--%>
-<%--                                             class="card-img-top trainer-avatar" alt="Default Avatar">--%>
-<%--                                    </c:otherwise>--%>
-<%--                                </c:choose>--%>
+                                    <c:choose>
+                                        <c:when test="${not empty trainer.avatar}">
+                                            <img src="${pageContext.request.contextPath}/image/${trainer.avatar}"
+                                                 class="card-img-top trainer-avatar" alt="${trainer.fullname}">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="https://ui-avatars.com/api/?name=${trainer.fullname}&background=random&size=250"
+                                                 class="card-img-top trainer-avatar" alt="Default Avatar">
+                                        </c:otherwise>
+                                    </c:choose>
 
-<%--                                <div class="card-body text-center">--%>
-<%--                                    <h5 class="card-title fw-bold text-primary">${trainer.fullname}</h5>--%>
-<%--                                    <p class="text-muted mb-2"><small>${trainer.email}</small></p>--%>
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title fw-bold text-primary">${trainer.fullname}</h5>
+                                        <p class="text-muted mb-2"><small>${trainer.email}</small></p>
 
-<%--                                    <hr>--%>
+                                        <hr>
 
-<%--                                    <div class="mb-3">--%>
-<%--                                        <h6 class="fw-bold" style="font-size: 0.9rem;">Võ đường phụ trách:</h6>--%>
-<%--                                        <c:if test="${empty trainer.managedDojos}">--%>
-<%--                                            <span class="text-muted fst-italic">Chưa phân công</span>--%>
-<%--                                        </c:if>--%>
-<%--                                        <c:forEach var="dojo" items="${trainer.managedDojos}">--%>
-<%--                                    <span class="dojo-badge">--%>
-<%--                                        <i class="bi bi-geo-alt-fill"></i> ${dojo.name}--%>
-<%--                                    </span>--%>
-<%--                                        </c:forEach>--%>
-<%--                                    </div>--%>
+                                        <div class="mb-3">
+                                            <h6 class="fw-bold" style="font-size: 0.9rem;">Võ đường phụ trách:</h6>
+                                            <c:if test="${empty trainer.managedDojos}">
+                                                <span class="text-muted fst-italic">Chưa phân công</span>
+                                            </c:if>
+                                            <c:forEach var="dojo" items="${trainer.managedDojos}">
+                                        <span class="dojo-badge">
+                                            <i class="bi bi-geo-alt-fill"></i> ${dojo.name}
+                                        </span>
+                                            </c:forEach>
+                                        </div>
 
-<%--                                    <a href="#" class="btn btn-outline-dark btn-sm rounded-pill px-4">Xem hồ sơ</a>--%>
-<%--                                </div>--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
-<%--                    </c:forEach>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--        <br><br>--%>
-<%--    </section>--%>
+                                        <a href="#" class="btn btn-outline-dark btn-sm rounded-pill px-4">Xem hồ sơ</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+            </div>
+            <br><br>
+        </section>
     <section id="faq" class="faq-section">
         <div class="container-fluid p-0">
             <div class="row g-0">
