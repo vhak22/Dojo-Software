@@ -23,6 +23,7 @@ CREATE TABLE Users (
     CONSTRAINT FK_User_Role FOREIGN KEY (RoleId) REFERENCES Roles(Id) 
         ON DELETE SET NULL
 );
+ALTER TABLE Users ADD Avatar NVARCHAR(255);
 
 -- 3. Bảng Võ đường (Giữ nguyên quan hệ với Master)
 CREATE TABLE Dojos (
@@ -33,7 +34,7 @@ CREATE TABLE Dojos (
     Active BIT DEFAULT 1,
     CONSTRAINT FK_Dojo_Master FOREIGN KEY (MasterId) REFERENCES Users(UserId)
 );
-
+ALTER TABLE Dojos ADD Images NVARCHAR(255);
 -- 4. Bảng Võ sinh
 CREATE TABLE Students (
     StudentId NVARCHAR(20) PRIMARY KEY,

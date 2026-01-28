@@ -34,15 +34,19 @@ public class User {
     @OneToMany(mappedBy = "master")
     private List<Dojo> managedDojos;
 
-    public User(List<Dojo> managedDojos, LocalDateTime createdAt, Role role, Boolean active, String email, String fullname, String password, String userId) {
+    @Column(name = "Avatar")
+    private String avatar;
+
+    public User(String userId, String avatar, List<Dojo> managedDojos, LocalDateTime createdAt, Boolean active, Role role, String email, String fullname, String password) {
+        this.userId = userId;
+        this.avatar = avatar;
         this.managedDojos = managedDojos;
         this.createdAt = createdAt;
-        this.role = role;
         this.active = active;
+        this.role = role;
         this.email = email;
         this.fullname = fullname;
         this.password = password;
-        this.userId = userId;
     }
 
     public User() {
@@ -110,6 +114,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public boolean hasRole(Role.RoleName roleNameToCheck) {

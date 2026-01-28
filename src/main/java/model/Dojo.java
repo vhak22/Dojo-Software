@@ -22,17 +22,21 @@ public class Dojo {
     private User master;
 
     @Column(name = "Active")
-    private Boolean active = true;
+    private Boolean active;
 
     // Một Dojo có nhiều lượt Enrollment
     @OneToMany(mappedBy = "dojo")
     private List<Enrollment> enrollments;
 
+    @Column(name = "Images")
+    private String image;
+
     public Dojo() {
     }
 
-    public Dojo(String dojoId, List<Enrollment> enrollments, Boolean active, User master, String address, String name) {
+    public Dojo(String dojoId, String image, List<Enrollment> enrollments, Boolean active, User master, String address, String name) {
         this.dojoId = dojoId;
+        this.image = image;
         this.enrollments = enrollments;
         this.active = active;
         this.master = master;
@@ -86,5 +90,13 @@ public class Dojo {
 
     public void setEnrollments(List<Enrollment> enrollments) {
         this.enrollments = enrollments;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

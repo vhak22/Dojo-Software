@@ -1,5 +1,7 @@
 package controller;
 
+import dao.DojoDAO;
+import dao.daoimpl.DojoDAOImpl;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -10,8 +12,11 @@ import java.io.IOException;
         "/home"
 })
 public class HomeServlet extends HttpServlet {
+    DojoDAO dojoDAO = new DojoDAOImpl();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("listDojo", dojoDAO.findAll());
         req.getRequestDispatcher("/views/index.jsp").forward(req,resp);
     }
 
