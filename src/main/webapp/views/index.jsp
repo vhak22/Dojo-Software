@@ -432,9 +432,43 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#faq">Hỏi Đáp</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Đăng nhập</a>
-                    </li>
+<%--                    <li class="nav-item">--%>
+<%--                        <a class="nav-link" href="/login">Đăng nhập</a>--%>
+<%--                    </li>--%>
+                    <%--hiển thị Đăng nhập / Người dùng --%>
+                    <c:choose>
+                        <c:when test="${empty sessionScope.currentUser}">
+                            <li class="nav-item">
+                                <a class="nav-link" href="${pageContext.request.contextPath}/login">Đăng nhập</a>
+                            </li>
+                        </c:when>
+
+                        <%--Đã đăng nhập --%>
+                        <c:otherwise>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Hello, ${sessionScope.currentUser.fullname}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="userDropdown">
+
+                                    <c:if test="${sessionScope.currentUser.role.roleName == 'ADMIN'}">
+                                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/admin/dashboard">Trang Quản Trị</a></li>
+                                    </c:if>
+                                    <c:if test="${sessionScope.currentUser.role.roleName == 'MASTER'}">
+                                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/master/dashboard">Quản Lý Võ Đường</a></li>
+                                    </c:if>
+                                    <c:if test="${sessionScope.currentUser.role.roleName == 'STAFF'}">
+                                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/staff/dashboard">Trang Nhân Viên</a></li>
+                                    </c:if>
+
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/update-profile">Cập nhật hồ sơ</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Đăng xuất</a></li>
+                                </ul>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
                     <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
                         <span class="text-white-50 small" style="cursor: pointer;">🌐 Vietnamese ▼</span>
                     </li>
