@@ -1,16 +1,62 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: nhukhue
-  Date: 2/1/2026
-  Time: 10:47 PM
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<!DOCTYPE html>
+<html lang="vi">
 <head>
-    <title>Title</title>
+    <meta charset="UTF-8">
+    <title>Quản lý Võ đường - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Style giữ nguyên như user-list.jsp để đồng bộ UI */
+        body { font-family: 'Roboto', sans-serif; color: #e0e0e0; background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('${pageContext.request.contextPath}/views/images/backgroundIndex.jpg') no-repeat center center fixed; background-size: cover; }
+        .sidebar { width: 280px; background-color: rgba(20, 20, 20, 0.95); border-right: 1px solid #333; display: flex; flex-direction: column; padding: 20px; height: 100vh; position: fixed; top: 0; left: 0; z-index: 1000; }
+        .main-content { margin-left: 280px; padding: 30px; min-height: 100vh; }
+        .table-dark { --bs-table-bg: rgba(33, 37, 41, 0.9); }
+    </style>
 </head>
 <body>
+<div class="main-content">
+    <h2 class="text-white mb-4" style="font-family: 'Oswald', sans-serif;">QUẢN LÝ VÕ ĐƯỜNG</h2>
+    <a href="${pageContext.request.contextPath}/dojo/create" class="btn btn-success mb-3">
+        <i class="fa-solid fa-plus"></i> Thêm Võ Đường Mới
+    </a>
 
+    <div class="table-responsive">
+        <table class="table table-dark table-striped table-hover border border-secondary">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên Võ Đường</th>
+                <th>Địa chỉ</th>
+                <th>Võ sư quản lý</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach var="item" items="${items}">
+                <tr class="${!item.active ? 'opacity-50' : ''}">
+                    <td>${item.dojoId}</td>
+                    <td>${item.name}</td>
+                    <td>${item.address}</td>
+                    <td>${item.master.fullname}</td> <td>
+                        <span class="badge ${item.active ? 'bg-success' : 'bg-secondary'}">
+                                ${item.active ? 'Hoạt động' : 'Tạm ngưng'}
+                        </span>
+                </td>
+                    <td>
+                        <a href="${pageContext.request.contextPath}/dojo/edit?id=${item.dojoId}" class="btn btn-sm btn-primary">Sửa</a>
+                        <c:if test="${item.active}">
+                            <a href="${pageContext.request.contextPath}/dojo/delete?id=${item.dojoId}" class="btn btn-sm btn-danger" onclick="return confirm('Ngưng hoạt động võ đường này?')">Khóa</a>
+                        </c:if>
+                    </td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </div>
+</div>
 </body>
 </html>
