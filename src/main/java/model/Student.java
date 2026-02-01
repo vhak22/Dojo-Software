@@ -30,10 +30,13 @@ public class Student {
     @OneToMany(mappedBy = "student")
     private List<Enrollment> enrollments;
 
+    @Column(name = "Active")
+    private Boolean active = true;
+
     public Student() {
     }
 
-    public Student(List<Enrollment> enrollments, String rank, String phone, Boolean gender, LocalDate birthday, String fullName, String studentId) {
+    public Student(List<Enrollment> enrollments, Boolean active, String rank, String phone, Boolean gender, LocalDate birthday, String fullName, String studentId) {
         this.enrollments = enrollments;
         this.rank = rank;
         this.phone = phone;
@@ -41,6 +44,7 @@ public class Student {
         this.birthday = birthday;
         this.fullName = fullName;
         this.studentId = studentId;
+        this.active = active;
     }
 
     public String getStudentId() {
@@ -97,5 +101,13 @@ public class Student {
 
     public void setRank(String rank) {
         this.rank = rank;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }
