@@ -12,13 +12,12 @@ import org.apache.commons.beanutils.BeanUtils;
 import java.io.IOException;
 import java.util.List;
 
-// 1. ĐỊNH NGHĨA CÁC ĐƯỜNG DẪN URL MÀ SERVLET NÀY SẼ XỬ LÝ
 @WebServlet({
-        "/admin/users",          // Trang danh sách (Trang chủ của module User)
-        "/admin/user/create",    // Xử lý thêm mới
+        "/admin/users",          // Trang danh sách
+        "/admin/user/create",    // Xử lý tạo mới
         "/admin/user/update",    // Xử lý cập nhật
         "/admin/user/delete",    // Xử lý xóa
-        "/admin/user/edit"       // Load form để sửa
+        "/admin/user/edit"       // Form sửa
 })
 public class UserManagementServlet extends HttpServlet {
 
@@ -26,90 +25,73 @@ public class UserManagementServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String path = req.getServletPath(); // Lấy phần đuôi của URL
+        String path = req.getServletPath();
 
-        // 2. ĐIỀU HƯỚNG DỰA TRÊN URL
         if (path.contains("edit")) {
-            // URL: /admin/user/edit?id=...
             String id = req.getParameter("id");
             User user = userDAO.findById(id);
             req.setAttribute("userForm", user);
             req.setAttribute("isEdit", true);
-            // Trỏ về file JSP trong thư mục views/admin
-            req.getRequestDispatcher("/views/admin/user-form.jsp").forward(req, resp);
+            req.getRequestDispatcher("/views/admin/user/user-form.jsp").forward(req, resp);
         }
         else if (path.contains("create")) {
-            // URL: /admin/user/create (Khi bấm nút Thêm mới)
             req.setAttribute("isEdit", false);
-            req.getRequestDispatcher("/views/admin/user-form.jsp").forward(req, resp);
+            req.getRequestDispatcher("/views/admin/user/user-form.jsp").forward(req, resp);
         }
         else if (path.contains("delete")) {
-            // URL: /admin/user/delete?id=...
             deleteUser(req, resp);
         }
         else {
-            // URL: /admin/users (Mặc định vào danh sách)
+            // Mặc định vào trang danh sách
             List<User> list = userDAO.findAll();
             req.setAttribute("items", list);
-            req.getRequestDispatcher("/views/admin/user-list.jsp").forward(req, resp);
+            req.getRequestDispatcher("/views/admin/user/user-list.jsp").forward(req, resp);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // Xử lý dữ liệu từ Form gửi lên (Create hoặc Update)
         String path = req.getServletPath();
         req.setCharacterEncoding("UTF-8");
 
         try {
-            String userId = req.getParameter("userId");
-            User user;
+            User user = new User();
+            // Lấy dữ liệu cơ bản từ form
+            BeanUtils.populate(user, req.getParameterMap());
 
-            if (path.contains("create")) {
-                // Logic tạo mới
-                if (userDAO.findById(userId) != null) {
-                    req.setAttribute("error", "User ID " + userId + " đã tồn tại!");
-                    User formUser = new User();
-                    BeanUtils.populate(formUser, req.getParameterMap());
-                    req.setAttribute("userForm", formUser);
-                    req.setAttribute("isEdit", false);
-                    req.getRequestDispatcher("/views/admin/user/user-form.jsp").forward(req, resp);
-                    return;
-                }
-                user = new User();
-                BeanUtils.populate(user, req.getParameterMap());
-            } else {
-                // Logic cập nhật
-                user = userDAO.findById(userId);
-                if (user == null) {
-                    resp.sendRedirect(req.getContextPath() + "/admin/users?error=not_found");
-                    return;
-                }
-                user.setFullname(req.getParameter("fullname"));
-                user.setEmail(req.getParameter("email"));
-            }
-
-            // Xử lý mật khẩu (Giữ cũ nếu không nhập mới)
-            String formPass = req.getParameter("password");
-            if (formPass != null && !formPass.trim().isEmpty()) {
-                user.setPassword(formPass);
-            }
-
-            // Xử lý Role (Dropdown)
+            // 1. Xử lý Role (Dropdown trả về roleId)
             int roleId = Integer.parseInt(req.getParameter("roleId"));
             Role role = new Role();
             role.setId(roleId);
             user.setRole(role);
 
-            // Xử lý Active (Checkbox)
+            // 2. Xử lý Checkbox Active (Quan trọng)
+            // HTML Checkbox: Tick -> "true", Không tick -> null
             boolean isActive = req.getParameter("active") != null;
             user.setActive(isActive);
 
-            // Lưu và Redirect về trang danh sách
             if (path.contains("create")) {
+                // --- LOGIC TẠO MỚI ---
+                if (userDAO.findById(user.getUserId()) != null) {
+                    req.setAttribute("error", "Mã User đã tồn tại!");
+                    req.setAttribute("userForm", user);
+                    req.setAttribute("isEdit", false);
+                    req.getRequestDispatcher("/views/admin/user/user-form.jsp").forward(req, resp);
+                    return;
+                }
                 userDAO.create(user);
                 resp.sendRedirect(req.getContextPath() + "/admin/users?message=create_success");
-            } else {
+            }
+            else {
+                // --- LOGIC CẬP NHẬT ---
+                User oldUser = userDAO.findById(user.getUserId());
+
+                // Giữ lại password cũ nếu không nhập mới
+                String newPass = req.getParameter("password");
+                if (newPass == null || newPass.trim().isEmpty()) {
+                    user.setPassword(oldUser.getPassword());
+                }
+
                 userDAO.update(user);
                 resp.sendRedirect(req.getContextPath() + "/admin/users?message=update_success");
             }
@@ -117,7 +99,7 @@ public class UserManagementServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             req.setAttribute("error", "Lỗi: " + e.getMessage());
-            req.getRequestDispatcher("/views/admin/user-form.jsp").forward(req, resp);
+            req.getRequestDispatcher("/views/admin/user/user-form.jsp").forward(req, resp);
         }
     }
 
@@ -126,7 +108,8 @@ public class UserManagementServlet extends HttpServlet {
             String id = req.getParameter("id");
             User user = userDAO.findById(id);
             if (user != null) {
-                user.setActive(false); // Soft Delete
+                // Soft Delete: Chỉ set Active = false
+                user.setActive(false);
                 userDAO.update(user);
                 resp.sendRedirect(req.getContextPath() + "/admin/users?message=delete_success");
             } else {
