@@ -1,10 +1,12 @@
 package controller.features.common;
 
-import dao.UserDAO;
+import dao.DojoDAO;
+import dao.daoimpl.DojoDAOImpl;
 import dao.daoimpl.UserDAOImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
+import model.Dojo;
 import model.Role;
 import model.User;
 import org.apache.commons.beanutils.BeanUtils; // Cần thư viện commons-beanutils
@@ -13,15 +15,14 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet({
-        "/admin/users",           // Xem danh sách
-        "/admin/user/create",     // Tạo mới
-        "/admin/user/update",     // Cập nhật
-        "/admin/user/delete",     // Xóa
-        "/admin/user/edit"        // Load form sửa
+        "/Dojos",           // Xem danh sách
+        "/Dojo/create",     // Tạo mới
+        "/Dojo/delete",     // Xóa
+        "/Dojo/edit"        // Load form sửa
 })
 public class DojoManagementServlet extends HttpServlet {
 
-    private UserDAO userDAO = new UserDAOImpl();
+    private DojoDAO dojoDAO = new DojoDAOImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -30,20 +31,22 @@ public class DojoManagementServlet extends HttpServlet {
         if (path.contains("edit")) {
             // Load thông tin user lên form để sửa
             String id = req.getParameter("id");
-            User user = userDAO.findById(id);
-            req.setAttribute("userForm", user);
+            Dojo dojo = dojoDAO.findById(id);
+            req.setAttribute("dojoForm", dojo);
             req.setAttribute("isEdit", true); // Đánh dấu là đang sửa
+            //sửa đường dẫn lại
             req.getRequestDispatcher("/views/admin/user-form.jsp").forward(req, resp);
         } else if (path.contains("create")) {
             // Mở form trống để tạo mới
             req.setAttribute("isEdit", false);
+            //sửa đường dẫn lại
             req.getRequestDispatcher("/views/admin/user-form.jsp").forward(req, resp);
         } else if (path.contains("delete")) {
             // Xóa user
-            deleteUser(req, resp);
+            deleteDojo(req, resp);
         } else {
             // Mặc định: Xem danh sách
-            List<User> list = userDAO.findAll();
+            List<Dojo> list = dojoDAO.findAll();
             req.setAttribute("items", list);
             req.getRequestDispatcher("/views/admin/user-list.jsp").forward(req, resp);
         }
@@ -57,29 +60,21 @@ public class DojoManagementServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
 
         try {
-            User formUser = new User();
-            BeanUtils.populate(formUser, req.getParameterMap()); // Mapping dữ liệu từ form vào object
-
-            // Xử lý Role (Vì BeanUtils khó map object lồng nhau, ta làm thủ công ID role)
-            // Giả sử form gửi về roleId (1, 2, 3)
-            int roleId = Integer.parseInt(req.getParameter("roleId"));
-            // Lưu ý: Bạn cần method getRoleById hoặc tạo object Role giả
-            Role role = new Role();
-            role.setId(roleId);
-            formUser.setRole(role);
+            Dojo formDojo = new Dojo();
+            BeanUtils.populate(formDojo, req.getParameterMap()); // Mapping dữ liệu từ form vào object
 
             if (path.contains("create")) {
-                if (userDAO.findById(formUser.getUserId()) != null) {
-                    req.setAttribute("message", "User ID đã tồn tại!");
+                if (dojoDAO.findById(formDojo.getDojoId()) != null) {
+                    req.setAttribute("message", "Dojo ID đã tồn tại!");
                     req.getRequestDispatcher("/views/admin/user-form.jsp").forward(req, resp);
                     return;
                 }
-                userDAO.create(formUser);
-                resp.sendRedirect(req.getContextPath() + "/admin/users?message=create_success");
+                dojoDAO.create(formDojo);
+                resp.sendRedirect(req.getContextPath() + "/Dojos?message=create_success");
 
             } else if (path.contains("update")) {
-                userDAO.update(formUser);
-                resp.sendRedirect(req.getContextPath() + "/admin/users?message=update_success");
+                dojoDAO.update(formDojo);
+                resp.sendRedirect(req.getContextPath() + "/Dojos?message=update_success");
             }
 
         } catch (Exception e) {
@@ -89,18 +84,18 @@ public class DojoManagementServlet extends HttpServlet {
         }
     }
 
-    private void deleteUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private void deleteDojo(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             String id = req.getParameter("id");
             //Soft delete
-            User user = userDAO.findById(id);
-            user.setActive(false);
-            userDAO.update(user);
+            Dojo dojo = dojoDAO.findById(id);
+            dojo.setActive(false);
+            dojoDAO.update(dojo);
 
-            resp.sendRedirect(req.getContextPath() + "/admin/users?message=delete_success");
+            resp.sendRedirect(req.getContextPath() + "/Dojos?message=delete_success");
         } catch (Exception e) {
             e.printStackTrace();
-            resp.sendRedirect(req.getContextPath() + "/admin/users?error=delete_fail");
+            resp.sendRedirect(req.getContextPath() + "/Dojos?error=delete_fail");
         }
     }
 }
