@@ -1,4 +1,4 @@
-package controller.staff;
+package controller.features.staff;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
