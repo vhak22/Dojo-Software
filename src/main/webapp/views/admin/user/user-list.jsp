@@ -58,6 +58,7 @@
 </head>
 <body>
 
+<jsp:include page="/views/admin/layout/sidebar.jsp" />
 
 
 <div class="main-content">
