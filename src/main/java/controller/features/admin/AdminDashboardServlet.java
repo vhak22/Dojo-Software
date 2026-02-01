@@ -1,4 +1,4 @@
-package controller.admin;
+package controller.features.admin;
 
 import dao.DojoDAO;
 import dao.StudentDAO;
