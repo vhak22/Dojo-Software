@@ -14,9 +14,53 @@
         .sidebar { width: 280px; background-color: rgba(20, 20, 20, 0.95); border-right: 1px solid #333; display: flex; flex-direction: column; padding: 20px; height: 100vh; position: fixed; top: 0; left: 0; z-index: 1000; }
         .main-content { margin-left: 280px; padding: 30px; min-height: 100vh; }
         .table-dark { --bs-table-bg: rgba(33, 37, 41, 0.9); }
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background-color: rgba(20, 20, 20, 0.95);
+            border-right: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            height: 100vh;
+            position: fixed;
+        }
+        .brand-title {
+            font-family: 'Oswald', sans-serif;
+            color: #ff6600;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .nav-link {
+            color: #bbb;
+            font-size: 1.1rem;
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #ff6600;
+            color: white;
+            transform: translateX(5px);
+        }
+        .nav-link i { width: 25px; text-align: center; margin-right: 10px; }
+
+        /* Sub-menu cho Enrollments -> Manage Students */
+        .sub-menu {
+            margin-left: 20px;
+            border-left: 2px solid #444;
+            padding-left: 10px;
+            display: none; /* Ẩn mặc định */
+        }
+        .has-submenu:hover .sub-menu { display: block; } /* Hiện khi hover */
+
     </style>
 </head>
 <body>
+<jsp:include page="/views/admin/layout/sidebar.jsp" />
 <div class="main-content">
     <h2 class="text-white mb-4" style="font-family: 'Oswald', sans-serif;">QUẢN LÝ VÕ ĐƯỜNG</h2>
     <a href="${pageContext.request.contextPath}/dojo/create" class="btn btn-success mb-3">

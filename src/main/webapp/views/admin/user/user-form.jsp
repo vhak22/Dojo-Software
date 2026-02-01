@@ -57,6 +57,7 @@
 
         <form action="${pageContext.request.contextPath}/admin/user/${isEdit ? 'update' : 'create'}" method="post">
 
+
           <div class="mb-3">
             <label class="form-label">Mã User (ID)</label>
             <input type="text" name="userId" class="form-control bg-secondary text-white border-0"

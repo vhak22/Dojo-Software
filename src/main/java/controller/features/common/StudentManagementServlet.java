@@ -6,19 +6,21 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import model.Student;
+import model.User;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.converters.DateTimeConverter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet({
-        "/students",
-        "/student/create",
-        "/student/edit",
-        "/student/update",
-        "/student/delete"
+        "/students",          // Trang danh sách
+        "/student/create",          // Action tạo (giữ nguyên hoặc thêm /admin/ tùy bạn)
+        "/student/edit",            // Action load form sửa
+        "/student/update",          // Action cập nhật
+        "/student/delete"           // Action xóa
 })
 public class StudentManagementServlet extends HttpServlet {
 
@@ -27,22 +29,33 @@ public class StudentManagementServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
+        User currentUser = (User) req.getSession().getAttribute("currentUser");
+        String roleName = String.valueOf(currentUser.getRole().getRoleName());
 
         if (path.contains("edit")) {
             String id = req.getParameter("id");
             Student student = studentDAO.findById(id);
-            req.setAttribute("student", student);
+            req.setAttribute("studentForm", student);
             req.setAttribute("isEdit", true);
-            req.getRequestDispatcher("/views/admin/student/student-form.jsp").forward(req, resp);
+            req.getRequestDispatcher("/views/admin/students/student-form.jsp").forward(req, resp);
         } else if (path.contains("create")) {
             req.setAttribute("isEdit", false);
-            req.getRequestDispatcher("/views/admin/student/student-form.jsp").forward(req, resp);
+            req.getRequestDispatcher("/views/admin/students/student-form.jsp").forward(req, resp);
         } else if (path.contains("delete")) {
             deleteStudent(req, resp);
         } else {
-            List<Student> list = studentDAO.findAll();
+            List<Student> list;
+            if ("ADMIN".equals(roleName)) {
+                list = studentDAO.findAll();
+            } else if ("MASTER".equals(roleName)) {
+                // Cần viết thêm hàm findByMasterId trong DAO
+                // Logic: Tìm student có Enrollment thuộc Dojo mà Master này quản lý
+                list = studentDAO.findByMasterId(currentUser.getUserId());
+            } else {
+                list = new ArrayList<>(); // Staff logic tùy chỉnh
+            }
             req.setAttribute("items", list);
-            req.getRequestDispatcher("/views/admin/student/student-list.jsp").forward(req, resp);
+            req.getRequestDispatcher("/views/admin/students/student-list.jsp").forward(req, resp);
         }
     }
 
@@ -52,6 +65,9 @@ public class StudentManagementServlet extends HttpServlet {
         String path = req.getServletPath();
 
         try {
+            org.apache.commons.beanutils.converters.DateConverter dtConverter = new org.apache.commons.beanutils.converters.DateConverter(null);
+            dtConverter.setPattern("yyyy-MM-dd");
+            org.apache.commons.beanutils.ConvertUtils.register(dtConverter, java.util.Date.class);
             Student formStudent = new Student();
             // Đăng ký converter cho ngày tháng nếu cần (Java 8 LocalDate)
             BeanUtils.populate(formStudent, req.getParameterMap());

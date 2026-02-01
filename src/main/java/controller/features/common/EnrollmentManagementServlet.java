@@ -22,7 +22,7 @@ import java.util.List;
 
 // Map cho cả 3 role để tái sử dụng logic
 @WebServlet({
-        "/admin/enrollments", "/admin/enrollments/create", "/admin/enrollments/update", "/admin/enrollments/delete", "/admin/enrollments/save",
+        "/enrollments", "/admin/enrollments", "/admin/enrollments/create", "/admin/enrollments/update", "/admin/enrollments/delete", "/admin/enrollments/save",
         "/master/enrollments", "/master/enrollments/create", "/master/enrollments/update", "/master/enrollments/delete", "/master/enrollments/save",
         "/staff/enrollments", "/staff/enrollments/create", "/staff/enrollments/update", "/staff/enrollments/delete", "/staff/enrollments/save"
 })
