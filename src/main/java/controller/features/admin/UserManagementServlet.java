@@ -7,17 +7,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import model.Role;
 import model.User;
-import org.apache.commons.beanutils.BeanUtils; // Cần thư viện commons-beanutils
+import org.apache.commons.beanutils.BeanUtils;
 
 import java.io.IOException;
 import java.util.List;
 
 @WebServlet({
-        "/admin/users",           // Xem danh sách
-        "/admin/user/create",     // Tạo mới
-        "/admin/user/update",     // Cập nhật
-        "/admin/user/delete",     // Xóa
-        "/admin/user/edit"        // Load form sửa
+        "/admin/users",          // Trang danh sách
+        "/admin/user/create",    // Xử lý tạo mới
+        "/admin/user/update",    // Xử lý cập nhật
+        "/admin/user/delete",    // Xử lý xóa
+        "/admin/user/edit"       // Form sửa
 })
 public class UserManagementServlet extends HttpServlet {
 
@@ -28,76 +28,93 @@ public class UserManagementServlet extends HttpServlet {
         String path = req.getServletPath();
 
         if (path.contains("edit")) {
-            // Load thông tin user lên form để sửa
             String id = req.getParameter("id");
             User user = userDAO.findById(id);
             req.setAttribute("userForm", user);
-            req.setAttribute("isEdit", true); // Đánh dấu là đang sửa
-            req.getRequestDispatcher("/views/admin/user-form.jsp").forward(req, resp);
-        } else if (path.contains("create")) {
-            // Mở form trống để tạo mới
+            req.setAttribute("isEdit", true);
+            req.getRequestDispatcher("/views/admin/user/user-form.jsp").forward(req, resp);
+        }
+        else if (path.contains("create")) {
             req.setAttribute("isEdit", false);
-            req.getRequestDispatcher("/views/admin/user-form.jsp").forward(req, resp);
-        } else if (path.contains("delete")) {
-            // Xóa user
+            req.getRequestDispatcher("/views/admin/user/user-form.jsp").forward(req, resp);
+        }
+        else if (path.contains("delete")) {
             deleteUser(req, resp);
-        } else {
-            // Mặc định: Xem danh sách
+        }
+        else {
+            // Mặc định vào trang danh sách
             List<User> list = userDAO.findAll();
             req.setAttribute("items", list);
-            req.getRequestDispatcher("/views/admin/user-list.jsp").forward(req, resp);
+            req.getRequestDispatcher("/views/admin/user/user-list.jsp").forward(req, resp);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
-
-        // Xử lý tiếng Việt
         req.setCharacterEncoding("UTF-8");
 
         try {
-            User formUser = new User();
-            BeanUtils.populate(formUser, req.getParameterMap()); // Mapping dữ liệu từ form vào object
+            User user = new User();
+            // Lấy dữ liệu cơ bản từ form
+            BeanUtils.populate(user, req.getParameterMap());
 
-            // Xử lý Role (Vì BeanUtils khó map object lồng nhau, ta làm thủ công ID role)
-            // Giả sử form gửi về roleId (1, 2, 3)
+            // 1. Xử lý Role (Dropdown trả về roleId)
             int roleId = Integer.parseInt(req.getParameter("roleId"));
-            // Lưu ý: Bạn cần method getRoleById hoặc tạo object Role giả
             Role role = new Role();
             role.setId(roleId);
-            formUser.setRole(role);
+            user.setRole(role);
+
+            // 2. Xử lý Checkbox Active (Quan trọng)
+            // HTML Checkbox: Tick -> "true", Không tick -> null
+            boolean isActive = req.getParameter("active") != null;
+            user.setActive(isActive);
 
             if (path.contains("create")) {
-                if (userDAO.findById(formUser.getUserId()) != null) {
-                    req.setAttribute("message", "User ID đã tồn tại!");
-                    req.getRequestDispatcher("/views/admin/user-form.jsp").forward(req, resp);
+                // --- LOGIC TẠO MỚI ---
+                if (userDAO.findById(user.getUserId()) != null) {
+                    req.setAttribute("error", "Mã User đã tồn tại!");
+                    req.setAttribute("userForm", user);
+                    req.setAttribute("isEdit", false);
+                    req.getRequestDispatcher("/views/admin/user/user-form.jsp").forward(req, resp);
                     return;
                 }
-                userDAO.create(formUser);
+                userDAO.create(user);
                 resp.sendRedirect(req.getContextPath() + "/admin/users?message=create_success");
+            }
+            else {
+                // --- LOGIC CẬP NHẬT ---
+                User oldUser = userDAO.findById(user.getUserId());
 
-            } else if (path.contains("update")) {
-                userDAO.update(formUser);
+                // Giữ lại password cũ nếu không nhập mới
+                String newPass = req.getParameter("password");
+                if (newPass == null || newPass.trim().isEmpty()) {
+                    user.setPassword(oldUser.getPassword());
+                }
+
+                userDAO.update(user);
                 resp.sendRedirect(req.getContextPath() + "/admin/users?message=update_success");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
             req.setAttribute("error", "Lỗi: " + e.getMessage());
-            req.getRequestDispatcher("/views/admin/user-form.jsp").forward(req, resp);
+            req.getRequestDispatcher("/views/admin/user/user-form.jsp").forward(req, resp);
         }
     }
 
     private void deleteUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             String id = req.getParameter("id");
-            //Soft delete
             User user = userDAO.findById(id);
-            user.setActive(false);
-            userDAO.update(user);
-
-            resp.sendRedirect(req.getContextPath() + "/admin/users?message=delete_success");
+            if (user != null) {
+                // Soft Delete: Chỉ set Active = false
+                user.setActive(false);
+                userDAO.update(user);
+                resp.sendRedirect(req.getContextPath() + "/admin/users?message=delete_success");
+            } else {
+                resp.sendRedirect(req.getContextPath() + "/admin/users?error=not_found");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             resp.sendRedirect(req.getContextPath() + "/admin/users?error=delete_fail");
