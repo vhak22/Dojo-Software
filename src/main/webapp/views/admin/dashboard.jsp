@@ -102,7 +102,7 @@
                 <i class="fa-solid fa-users-gear"></i> Manage Users
             </a>
 
-            <a class="nav-link" href="${pageContext.request.contextPath}/dojo">
+            <a class="nav-link" href="${pageContext.request.contextPath}/dojos">
                 <i class="fa-solid fa-torii-gate"></i> Manage Dojos
             </a>
 
