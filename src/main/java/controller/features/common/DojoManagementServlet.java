@@ -6,6 +6,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import model.Dojo;
+import model.Role;
+import model.User;
 import org.apache.commons.beanutils.BeanUtils;
 
 import java.io.IOException;
@@ -25,6 +27,7 @@ public class DojoManagementServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
+        User currentUser = (User) req.getSession().getAttribute("currentUser");
 
         if (path.contains("edit")) {
             String id = req.getParameter("id");
@@ -38,10 +41,16 @@ public class DojoManagementServlet extends HttpServlet {
         } else if (path.contains("delete")) {
             deleteDojo(req, resp);
         } else {
-            // Mặc định xem danh sách
-            List<Dojo> list = dojoDAO.findAll();
-            req.setAttribute("items", list);
-            req.getRequestDispatcher("/views/admin/dojo/dojo-list.jsp").forward(req, resp);
+            if (currentUser.getRole().getRoleName().equals(Role.RoleName.ADMIN)) {
+                // Admin thì lấy tất cả
+                List<Dojo> list = dojoDAO.findAll();
+                req.setAttribute("items", list);
+            } else if (currentUser.getRole().getRoleName().equals(Role.RoleName.MASTER)) {
+                // Master thì chỉ lấy những võ đường họ quản lý
+                // (Dựa vào List<Dojo> managedDojos trong model User)
+                List<Dojo> list = currentUser.getManagedDojos();
+                req.setAttribute("items", list);
+            }
         }
     }
 

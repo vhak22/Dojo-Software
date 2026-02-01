@@ -58,44 +58,7 @@
 </head>
 <body>
 
-<div class="sidebar">
-    <div class="brand-title"><i class="fa-solid fa-dragon"></i>Vovinam Thu Duc</div>
 
-    <nav class="nav flex-column">
-        <a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">
-            <i class="fa-solid fa-chart-line"></i> Dashboard
-        </a>
-
-        <a class="nav-link" href="${pageContext.request.contextPath}/admin/users">
-            <i class="fa-solid fa-users-gear"></i> Manage Users
-        </a>
-
-        <a class="nav-link" href="${pageContext.request.contextPath}/dojo">
-            <i class="fa-solid fa-torii-gate"></i> Manage Dojos
-        </a>
-
-        <div class="has-submenu">
-            <a class="nav-link" href="#"><i class="fa-solid fa-clipboard-list"></i> Enrollments (Đăng kí nhập học)</a>
-            <div class="sub-menu">
-                <a class="nav-link text-sm" href="#" style="font-size: 0.9rem;">
-                    <i class="fa-solid fa-arrow-turn-up fa-rotate-90"></i> Manage Students
-                </a>
-            </div>
-        </div>
-
-        <div class="mt-auto">
-            <hr class="text-white">
-            <div class="d-flex align-items-center text-white mb-3">
-                <img src="https://ui-avatars.com/api/?name=${sessionScope.currentUser.fullname}&background=ff6600&color=fff" class="rounded-circle me-2" width="40">
-                <div>
-                    <div class="fw-bold">${sessionScope.currentUser.fullname}</div>
-                    <small class="text-muted">Administrator</small>
-                </div>
-            </div>
-            <a href="${pageContext.request.contextPath}/logout" class="btn btn-outline-danger w-100">Đăng xuất</a>
-        </div>
-    </nav>
-</div>
 
 <div class="main-content">
     <h2 class="text-white mb-4" style="font-family: 'Oswald', sans-serif;">QUẢN LÝ NGƯỜI DÙNG</h2>

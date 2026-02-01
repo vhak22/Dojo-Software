@@ -19,6 +19,6 @@ public class StaffDashboardServlet extends HttpServlet {
             return;
         }
 
-        req.getRequestDispatcher("/views/staff/dashboard.jsp").forward(req, resp);
+        req.getRequestDispatcher("/views/admin/dashboard.jsp").forward(req, resp);
     }
 }

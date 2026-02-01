@@ -19,6 +19,6 @@ public class MasterDashboardServlet extends HttpServlet {
             return;
         }
 
-        req.getRequestDispatcher("/views/master/dashboard.jsp").forward(req, resp);
+        req.getRequestDispatcher("/views/admin/dashboard.jsp").forward(req, resp);
     }
 }

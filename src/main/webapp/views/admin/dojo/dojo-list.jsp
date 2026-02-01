@@ -46,12 +46,19 @@
                                 ${item.active ? 'Hoạt động' : 'Tạm ngưng'}
                         </span>
                 </td>
+                    <c:if test="${sessionScope.currentUser.role.roleName == 'ADMIN' || sessionScope.currentUser.role.roleName == 'MASTER'}">
                     <td>
                         <a href="${pageContext.request.contextPath}/dojo/edit?id=${item.dojoId}" class="btn btn-sm btn-primary">Sửa</a>
                         <c:if test="${item.active}">
                             <a href="${pageContext.request.contextPath}/dojo/delete?id=${item.dojoId}" class="btn btn-sm btn-danger" onclick="return confirm('Ngưng hoạt động võ đường này?')">Khóa</a>
                         </c:if>
                     </td>
+                    </c:if>
+                    <c:if test="${sessionScope.currentUser.role.roleName == 'STAFF'}">
+                    <td>
+                        <div class="btn btn-sm btn-danger"> STAFF </div>
+                    </td>
+                    </c:if>
                 </tr>
             </c:forEach>
             </tbody>
