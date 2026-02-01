@@ -366,9 +366,9 @@
             padding-bottom: 30px;
         }
 
-        /* Xử lý dấu + và dấu x bằng Javascript hoặc CSS thủ công */
-        /* Ở đây tôi dùng Javascript inline trong thẻ HTML để đổi dấu + thành x cho đơn giản */
-        /* Nhưng để chuyên nghiệp, ta dùng CSS selector dưới đây: */
+         /*Xử lý dấu + và dấu x bằng Javascript hoặc CSS thủ công */
+         /*Ở đây tôi dùng Javascript inline trong thẻ HTML để đổi dấu + thành x cho đơn giản */
+         /*Nhưng để chuyên nghiệp, ta dùng CSS selector dưới đây: */
 
         .icon-indicator {
             display: inline-block;
