@@ -203,7 +203,7 @@ INSERT INTO Enrollments (StudentId, DojoId, EnrollDate, status) VALUES
 GO
 GO
 
-USE master;
+/*USE master;
 GO
 -- Kiểm tra xem database có tồn tại hay không trước khi xóa
 IF EXISTS (SELECT name FROM sys.databases WHERE name = N'Dojo')
@@ -220,8 +220,9 @@ ELSE
 BEGIN
     PRINT 'Database Dojo khong ton tai.';
 END
-GO
-
+GO*/
+ALTER TABLE Students ADD Active BIT
+UPDATE Students SET Active = 1;
 Select * from Roles
 GO
 SELECT * FROM Users
