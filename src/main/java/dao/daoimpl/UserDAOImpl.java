@@ -29,4 +29,16 @@ public class UserDAOImpl extends AbstractDAO<User, String> implements UserDAO {
             em.close();
         }
     }
+
+    @Override
+    public long count() {
+        EntityManager em = XJPA.getEntityManager();
+        try {
+            String jpql = "SELECT COUNT(u) FROM User u";
+            return em.createQuery(jpql, Long.class).getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+
 }
