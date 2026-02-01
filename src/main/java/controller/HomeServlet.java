@@ -22,7 +22,6 @@ public class HomeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         req.setAttribute("trainers",userDAO.findByRole(Role.RoleName.MASTER) );
         req.setAttribute("listDojo", dojoDAO.findAll());
         req.getRequestDispatcher("/views/index.jsp").forward(req,resp);
