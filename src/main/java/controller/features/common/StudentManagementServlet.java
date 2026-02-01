@@ -1,4 +1,4 @@
-package controller.admin;
+package controller.features.common;
 
 public class StudentManagementServlet {
 }
