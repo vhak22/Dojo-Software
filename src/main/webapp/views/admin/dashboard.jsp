@@ -94,13 +94,17 @@
         <div class="brand-title"><i class="fa-solid fa-dragon"></i>Vovinam Thu Duc</div>
 
         <nav class="nav flex-column">
-            <a class="nav-link" href="#"><i class="fa-solid fa-chart-line"></i> Dashboard / Stats</a>
+            <a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">
+                <i class="fa-solid fa-chart-line"></i> Dashboard
+            </a>
 
-            <a class="nav-link" href="#"><i class="fa-solid fa-screwdriver-wrench"></i> System Admin</a>
+            <a class="nav-link" href="${pageContext.request.contextPath}/admin/users">
+                <i class="fa-solid fa-users-gear"></i> Manage Users
+            </a>
 
-            <a class="nav-link" href="#"><i class="fa-solid fa-users-gear"></i> Manage Users</a>
-
-            <a class="nav-link" href="#"><i class="fa-solid fa-torii-gate"></i> Manage Dojos</a>
+            <a class="nav-link" href="${pageContext.request.contextPath}/dojo">
+                <i class="fa-solid fa-torii-gate"></i> Manage Dojos
+            </a>
 
             <div class="has-submenu">
                 <a class="nav-link" href="#"><i class="fa-solid fa-clipboard-list"></i> Enrollments (Đăng kí nhập học)</a>
