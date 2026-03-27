@@ -37,7 +37,10 @@ public class User {
     @Column(name = "Avatar")
     private String avatar;
 
-    public User(String userId, String avatar, List<Dojo> managedDojos, LocalDateTime createdAt, Boolean active, Role role, String email, String fullname, String password) {
+    @Column(name = "Auth_provider", length = 20)
+    private String authProvider = "LOCAL";
+
+    public User(String userId, String avatar, List<Dojo> managedDojos, LocalDateTime createdAt, Boolean active, Role role, String email, String fullname, String password, String authProvider) {
         this.userId = userId;
         this.avatar = avatar;
         this.managedDojos = managedDojos;
@@ -47,6 +50,7 @@ public class User {
         this.email = email;
         this.fullname = fullname;
         this.password = password;
+        this.authProvider = authProvider;
     }
 
     public User() {
@@ -122,6 +126,14 @@ public class User {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getAuthProvider() {
+        return authProvider;
+    }
+
+    public void setAuthProvider(String authProvider) {
+        this.authProvider = authProvider;
     }
 
     public boolean hasRole(Role.RoleName roleNameToCheck) {

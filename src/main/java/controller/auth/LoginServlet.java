@@ -24,7 +24,7 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
+        req.getRequestDispatcher("/views/auth/login.jsp").forward(req, resp);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class LoginServlet extends HttpServlet {
                 // 3. Kiểm tra tài khoản có bị khóa không
                 if (!user.getActive()) {
                     req.setAttribute("errorMessage", "Tài khoản của bạn đã bị khóa!");
-                    req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
+                    req.getRequestDispatcher("/views/auth/login.jsp").forward(req, resp);
                     return;
                 }
 
@@ -58,19 +58,19 @@ public class LoginServlet extends HttpServlet {
             } else {
                 // Đăng nhập thất bại
                 req.setAttribute("errorMessage", "Sai tên đăng nhập hoặc mật khẩu!");
-                req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
+                req.getRequestDispatcher("/views/auth/login.jsp").forward(req, resp);
             }
         } catch (Exception e) {
             e.printStackTrace();
             req.setAttribute("errorMessage", "Lỗi hệ thống: " + e.getMessage());
-            req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
+            req.getRequestDispatcher("/views/auth/login.jsp").forward(req, resp);
         }
     }
 
     // Hàm phụ trợ để điều hướng user
     private void redirectBasedOnRole(HttpServletResponse resp, User user) throws IOException {
         Role.RoleName roleName = user.getRole().getRoleName();
-
+        //admin = ADMIN,
         if (roleName == Role.RoleName.ADMIN) {
             resp.sendRedirect("admin/dashboard");
         } else if (roleName == Role.RoleName.MASTER) {

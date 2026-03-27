@@ -62,7 +62,7 @@ public class DojoManagementServlet extends HttpServlet {
         else {
             // --- SỬA ĐOẠN HIỂN THỊ DANH SÁCH ---
             List<Dojo> list;
-            String roleName =String.valueOf(currentUser.getRole().getRoleName());
+            String roleName =String.valueOf(currentUser.getRole().getRoleName());//getRole() == 1 (nhows 1 là admin)
 
             if ("ADMIN".equalsIgnoreCase(roleName)) {
                 list = dojoDAO.findAll();
