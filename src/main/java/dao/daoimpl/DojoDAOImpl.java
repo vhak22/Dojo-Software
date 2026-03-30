@@ -17,8 +17,8 @@ public class DojoDAOImpl extends AbstractDAO<Dojo, String> implements DojoDAO {
     public long count() {
         EntityManager em = XJPA.getEntityManager();
         try {
-            String jpql = "SELECT COUNT(u) FROM User u";
-            return em.createQuery(jpql, Long.class).getSingleResult();
+            String jpql = "SELECT COUNT(d) FROM Dojo d";
+            return em.createQuery(jpql, Long.class).getSingleResult(); // total Dojo records
         } finally {
             em.close();
         }
