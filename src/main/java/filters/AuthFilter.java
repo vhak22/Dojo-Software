@@ -21,7 +21,7 @@ public class AuthFilter implements Filter {
         String uri = req.getRequestURI();
         String contextPath = req.getContextPath();
 
-        // 1) Not logged in -> login page
+        // 1) Chưa login ==> về trang login
         if (!AuthUtil.isLoggedIn(req)) {
             resp.sendRedirect(contextPath + "/login");
             return;
