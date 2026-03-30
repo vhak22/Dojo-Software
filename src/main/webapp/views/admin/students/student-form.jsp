@@ -142,7 +142,7 @@
 
                     <div class="d-flex justify-content-end">
                         <%-- Cập nhật link hủy về trang danh sách Admin --%>
-                        <a href="${pageContext.request.contextPath}/admin/students" class="btn btn-secondary me-2">Hủy</a>
+                        <a href="${pageContext.request.contextPath}/students" class="btn btn-secondary me-2">Hủy</a>
                         <button type="submit" class="btn btn-warning fw-bold">Lưu thông tin</button>
                     </div>
                 </form>

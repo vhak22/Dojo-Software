@@ -15,6 +15,7 @@ import model.Dojo;
 import model.Enrollment;
 import model.Student;
 import model.User;
+import utils.ParamUtil;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -22,9 +23,10 @@ import java.util.List;
 
 // Map cho cả 3 role để tái sử dụng logic
 @WebServlet({
-        "/enrollments", "/admin/enrollments", "/admin/enrollments/create", "/admin/enrollments/update", "/admin/enrollments/delete", "/admin/enrollments/save",
-        "/master/enrollments", "/master/enrollments/create", "/master/enrollments/update", "/master/enrollments/delete", "/master/enrollments/save",
-        "/staff/enrollments", "/staff/enrollments/create", "/staff/enrollments/update", "/staff/enrollments/delete", "/staff/enrollments/save"
+        "/enrollments", "/enrollments/create", "/enrollments/edit", "/enrollments/update", "/enrollments/delete", "/enrollments/save",
+        "/admin/enrollments", "/admin/enrollments/create", "/admin/enrollments/edit", "/admin/enrollments/update", "/admin/enrollments/delete", "/admin/enrollments/save",
+        "/master/enrollments", "/master/enrollments/create", "/master/enrollments/edit", "/master/enrollments/update", "/master/enrollments/delete", "/master/enrollments/save",
+        "/staff/enrollments", "/staff/enrollments/create", "/staff/enrollments/edit", "/staff/enrollments/update", "/staff/enrollments/delete", "/staff/enrollments/save"
 })
 public class EnrollmentManagementServlet extends HttpServlet {
 
@@ -85,17 +87,13 @@ public class EnrollmentManagementServlet extends HttpServlet {
     }
 
     private void showForm(HttpServletRequest req, HttpServletResponse resp, String rolePath) throws ServletException, IOException {
-        String idStr = req.getParameter("id");
+        Integer id = ParamUtil.getInt(req, "id", null);
         Enrollment enrollment = new Enrollment();
 
-        if (idStr != null && !idStr.isEmpty()) {
+        if (id != null) {
             // Chế độ Edit
             try {
-                // DAO của bạn dùng String làm key trong interface CrudDAO<Enrollment, String>
-                // Nhưng Model Enrollment dùng Integer id.
-                // Tùy implementation của findById, bạn có thể cần parse hoặc truyền chuỗi.
-                // Giả sử findById nhận String:
-                enrollment = enrollmentDAO.findById(idStr);
+                enrollment = enrollmentDAO.findById(id);
                 req.setAttribute("isEdit", true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -121,17 +119,22 @@ public class EnrollmentManagementServlet extends HttpServlet {
     private void saveEnrollment(HttpServletRequest req, HttpServletResponse resp, String rolePath) throws IOException {
         try {
             // 1. Lấy dữ liệu từ form
-            String idStr = req.getParameter("id");
-            String studentId = req.getParameter("studentId");
-            String dojoId = req.getParameter("dojoId");
-            String dateStr = req.getParameter("enrollmentDate");
-            String statusStr = req.getParameter("status"); // Giá trị: ACTIVE, DROPPED...
+            Integer id = ParamUtil.getInt(req, "id", null);
+            String studentId = ParamUtil.getString(req, "studentId", null);
+            String dojoId = ParamUtil.getString(req, "dojoId", null);
+            LocalDate enrollDate = ParamUtil.getLocalDate(req, "enrollmentDate", "yyyy-MM-dd", LocalDate.now());
+            Enrollment.EnrollmentStatus status = ParamUtil.getEnum(
+                    req,
+                    "status",
+                    Enrollment.EnrollmentStatus.class,
+                    Enrollment.EnrollmentStatus.ACTIVE
+            );
 
             Enrollment enrollment = new Enrollment();
 
             // Xử lý ID (Update)
-            if (idStr != null && !idStr.isEmpty()) {
-                enrollment.setId(Integer.parseInt(idStr));
+            if (id != null) {
+                enrollment.setId(id);
             }
 
             // Xử lý Student (Foreign Key)
@@ -143,19 +146,8 @@ public class EnrollmentManagementServlet extends HttpServlet {
             enrollment.setDojo(dojo);
 
             // Xử lý Date
-            if (dateStr != null && !dateStr.isEmpty()) {
-                enrollment.setEnrollDate(LocalDate.parse(dateStr));
-            } else {
-                enrollment.setEnrollDate(LocalDate.now());
-            }
-
-            // Xử lý Enum Status
-            // Form gửi lên String "ACTIVE", "DROPPED" -> convert sang Enum
-            if (statusStr != null && !statusStr.isEmpty()) {
-                enrollment.setStatus(Enrollment.EnrollmentStatus.valueOf(statusStr));
-            } else {
-                enrollment.setStatus(Enrollment.EnrollmentStatus.ACTIVE); // Default
-            }
+            enrollment.setEnrollDate(enrollDate);
+            enrollment.setStatus(status);
 
             // 2. Gọi DAO lưu
             if (enrollment.getId() != null && enrollment.getId() > 0) {
@@ -176,11 +168,10 @@ public class EnrollmentManagementServlet extends HttpServlet {
     }
 
     private void deleteEnrollment(HttpServletRequest req, HttpServletResponse resp, String rolePath) throws IOException {
-        String idStr = req.getParameter("id");
-        if (idStr != null) {
+        Integer id = ParamUtil.getInt(req, "id", null);
+        if (id != null) {
             try {
-                // Giả sử delete nhận String ID theo interface CrudDAO
-                enrollmentDAO.deleteById(idStr);
+                enrollmentDAO.deleteById(id);
                 req.getSession().setAttribute("message", "Đã xóa bản ghi danh!");
             } catch (Exception e) {
                 req.getSession().setAttribute("error", "Xóa thất bại: " + e.getMessage());
