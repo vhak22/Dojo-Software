@@ -42,7 +42,7 @@ public class UserManagementServlet extends HttpServlet {
             deleteUser(req, resp);
         }
         else {
-            // Mặc định vào trang danh sách
+            this.handlePagination(req, userDAO);
             List<User> list = userDAO.findAll();
             req.setAttribute("items", list);
             req.getRequestDispatcher("/views/admin/user/user-list.jsp").forward(req, resp);
@@ -101,6 +101,40 @@ public class UserManagementServlet extends HttpServlet {
             req.setAttribute("error", "Lỗi: " + e.getMessage());
             req.getRequestDispatcher("/views/admin/user/user-form.jsp").forward(req, resp);
         }
+    }
+    private void handlePagination(HttpServletRequest request, UserDAO dao) {
+        // 1. Lấy tham số keyword
+        String keyword = request.getParameter("keyword");
+        if (keyword == null) {
+            keyword = "";
+        }
+
+        // 2. Xử lý số trang hiện tại (mặc định là 1)
+        int currentPage = 1;
+        String pageStr = request.getParameter("page");
+        try {
+            if (pageStr != null && !pageStr.isEmpty()) {
+                currentPage = Integer.parseInt(pageStr);
+            }
+        } catch (NumberFormatException e) {
+            currentPage = 1;
+        }
+
+        // 3. Cấu hình kích thước trang theo Lab 5
+        int pageSize = 20;
+
+        // 4. Gọi DAO để lấy dữ liệu
+        List<User> list = dao.searchAndPaginate(keyword, currentPage, pageSize);
+        long totalCount = dao.getTotalCount(keyword);
+
+        // 5. Tính tổng số trang
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+
+        // 6. Đẩy tất cả vào request attribute
+        request.setAttribute("userList", list);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("keyword", keyword);
     }
 
     private void deleteUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {

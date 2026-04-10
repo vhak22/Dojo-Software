@@ -23,8 +23,8 @@ public class LoginServlet extends HttpServlet {
             redirectBasedOnRole(resp, (User) session.getAttribute("currentUser"));
             return;
         }
-
-        req.getRequestDispatcher("/views/auth/login.jsp").forward(req, resp);
+        req.getRequestDispatcher("/views/auth/logi1n.jsp").forward(req, resp);
+//        req.getRequestDispatcher("/views/auth/login.jsp").forward(req, resp);
     }
 
     @Override

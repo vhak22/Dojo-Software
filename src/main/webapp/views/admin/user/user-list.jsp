@@ -112,6 +112,11 @@
                     </td>
                 </tr>
             </c:forEach>
+            <c:if test="${empty items}">
+                <tr>
+                    <td colspan="5" class="text-center">Không tìm thấy kết quả nào.</td>
+                </tr>
+            </c:if>
             </tbody>
         </table>
     </div>
