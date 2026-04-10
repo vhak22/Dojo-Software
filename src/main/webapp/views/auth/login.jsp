@@ -157,7 +157,8 @@
         <button type="submit" class="btn btn-custom">Truy cập hệ thống</button>
 
         <div class="divider small">hoặc</div>
-        <a href="${pageContext.request.contextPath}/register" class="btn btn-register text-decoration-none d-block text-center">Đăng ký tài khoản</a>
+        <a href="${pageContext.request.contextPath}/auth/google" class="btn btn-custom text-decoration-none d-block text-center">Đăng nhập với Google</a>
+        <a href="${pageContext.request.contextPath}/register" class="btn btn-register text-decoration-none d-block text-center mt-2">Đăng ký tài khoản</a>
 
         <div class="text-center mt-4">
             <a href="${pageContext.request.contextPath}/home"
