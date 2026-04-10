@@ -19,8 +19,8 @@ public class StudentDAOImpl extends AbstractDAO<Student, String> implements Stud
     public long count() {
         EntityManager em = XJPA.getEntityManager();
         try {
-            String jpql = "SELECT COUNT(u) FROM User u";
-            return em.createQuery(jpql, Long.class).getSingleResult();
+            String jpql = "SELECT COUNT(s) FROM Student s";
+            return em.createQuery(jpql, Long.class).getSingleResult(); // total Student records
         } finally {
             em.close();
         }

@@ -95,33 +95,130 @@
     <div class="main-content">
         <h2 class="text-white mb-4" style="font-family: 'Oswald', sans-serif;">TỔNG QUAN HỆ THỐNG</h2>
 
-        <div class="row">
+        <div class="row g-3">
             <div class="col-md-3">
                 <div class="card-dashboard text-center">
                     <div class="card-title">Total Users</div>
-                    <div class="stat-number">150</div>
-                    <p class="text-white-50">Active accounts</p>
+                    <div class="stat-number">${totalUsers}</div>
+                    <p class="text-white-50">Active: ${activeUsers} | Inactive: ${inactiveUsers}</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card-dashboard text-center">
                     <div class="card-title">Total Dojos</div>
-                    <div class="stat-number">12</div>
+                    <div class="stat-number">${totalDojos}</div>
                     <p class="text-white-50">Operating locations</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card-dashboard text-center">
-                    <div class="card-title">New Enrollments</div>
-                    <div class="stat-number">45</div>
-                    <p class="text-white-50">This month</p>
+                    <div class="card-title">Total Students</div>
+                    <div class="stat-number">${totalStudents}</div>
+                    <p class="text-white-50">Active students</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card-dashboard text-center">
-                    <div class="card-title">System Health</div>
-                    <div class="stat-number text-success">Good</div>
-                    <p class="text-white-50">All services running</p>
+                    <div class="card-title">Total Enrollments</div>
+                    <div class="stat-number">${totalEnrollments}</div>
+                    <p class="text-white-50">All enrollment records</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mt-1">
+            <div class="col-lg-7">
+                <div class="card-dashboard">
+                    <h5 class="card-title mb-3">
+                        <i class="fa-solid fa-chart-bar"></i> System Totals
+                    </h5>
+                    <canvas id="systemTotalsChart" height="120"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="card-dashboard">
+                    <h5 class="card-title mb-3">
+                        <i class="fa-solid fa-user-check"></i> User Status
+                    </h5>
+                    <canvas id="userStatusChart" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mt-1">
+            <div class="col-lg-7">
+                <div class="card-dashboard">
+                    <h5 class="card-title mb-3">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Recent Users
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped align-middle">
+                            <thead>
+                                <tr>
+                                    <th>UserId</th>
+                                    <th>Full name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Active</th>
+                                    <th>Created</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="u" items="${recentUsers}">
+                                    <tr>
+                                        <td>${u.userId}</td>
+                                        <td>${u.fullname}</td>
+                                        <td>${u.email}</td>
+                                        <td>${u.role.roleName}</td>
+                                        <td>${u.active}</td>
+                                        <td>${u.createdAt}</td>
+                                    </tr>
+                                </c:forEach>
+                                <c:if test="${empty recentUsers}">
+                                    <tr>
+                                        <td colspan="6" class="text-center text-white-50">No user records</td>
+                                    </tr>
+                                </c:if>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card-dashboard">
+                    <h5 class="card-title mb-3">
+                        <i class="fa-solid fa-clipboard-list"></i> Recent Enrollments
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped align-middle">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Student</th>
+                                    <th>Dojo</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="e" items="${recentEnrollments}">
+                                    <tr>
+                                        <td>${e.id}</td>
+                                        <td>${e.student.fullName}</td>
+                                        <td>${e.dojo.name}</td>
+                                        <td>${e.enrollDate}</td>
+                                        <td>${e.status}</td>
+                                    </tr>
+                                </c:forEach>
+                                <c:if test="${empty recentEnrollments}">
+                                    <tr>
+                                        <td colspan="5" class="text-center text-white-50">No enrollment records</td>
+                                    </tr>
+                                </c:if>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -137,6 +234,56 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        window.addEventListener('load', function () {
+            const totalUsers = ${totalUsers != null ? totalUsers : 0};
+            const totalDojos = ${totalDojos != null ? totalDojos : 0};
+            const totalStudents = ${totalStudents != null ? totalStudents : 0};
+            const totalEnrollments = ${totalEnrollments != null ? totalEnrollments : 0};
+            const activeUsers = ${activeUsers != null ? activeUsers : 0};
+            const inactiveUsers = ${inactiveUsers != null ? inactiveUsers : 0};
+
+            const systemTotalsEl = document.getElementById('systemTotalsChart');
+            if (systemTotalsEl) {
+                new Chart(systemTotalsEl, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Users', 'Dojos', 'Students', 'Enrollments'],
+                        datasets: [{
+                            label: 'Total records',
+                            data: [totalUsers, totalDojos, totalStudents, totalEnrollments],
+                            backgroundColor: ['#ff6600', '#20c997', '#0d6efd', '#6610f2']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: true } },
+                        scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+                    }
+                });
+            }
+
+            const userStatusEl = document.getElementById('userStatusChart');
+            if (userStatusEl) {
+                new Chart(userStatusEl, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Active', 'Inactive'],
+                        datasets: [{
+                            data: [activeUsers, inactiveUsers],
+                            backgroundColor: ['#198754', '#dc3545']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            }
+        });
+    </script>
 </div>
 </body>
 </html>
