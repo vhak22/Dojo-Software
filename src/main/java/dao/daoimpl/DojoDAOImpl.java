@@ -36,4 +36,14 @@ public class DojoDAOImpl extends AbstractDAO<Dojo, String> implements DojoDAO {
             em.close();
         }
     }
+
+    @Override
+    public List<Dojo> searchAndPaginate(String keyword, int page, int pageSize) {
+        return List.of();
+    }
+
+    @Override
+    public long getTotalCount(String keyword) {
+        return 0;
+    }
 }

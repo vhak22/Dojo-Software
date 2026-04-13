@@ -64,6 +64,13 @@
 <div class="main-content">
     <h2 class="text-white mb-4" style="font-family: 'Oswald', sans-serif;">QUẢN LÝ NGƯỜI DÙNG</h2>
 
+    <form action="${pageContext.request.contextPath}/admin/users" method="GET" class="form-inline mb-3">
+        <div class="input-group">
+            <input type="text" name="keyword" class="form-control" value="${keyword}" placeholder="Tìm mã, tên, email...">
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        </div>
+    </form>
+
     <a href="${pageContext.request.contextPath}/admin/user/create" class="btn btn-success mb-3">
         <i class="fa-solid fa-plus"></i> Thêm User Mới
     </a>
@@ -88,27 +95,32 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach var="item" items="${items}">
-                <tr class="${!item.active ? 'opacity-50' : ''}">
-                    <td>${item.userId}</td>
-                    <td>${item.fullname}</td>
-                    <td>${item.email}</td>
+            <c:forEach var="u" items="${items}">
+                <tr class="${!u.active ? 'opacity-50' : ''}">
+                    <td>${u.userId}</td>
+                    <td>${u.fullname}</td>
+                    <td>${u.email}</td>
                     <td>
                         <c:choose>
-                            <c:when test="${item.role.roleName == 'ADMIN'}"><span class="badge bg-danger">ADMIN</span></c:when>
-                            <c:when test="${item.role.roleName == 'MASTER'}"><span class="badge bg-primary">MASTER</span></c:when>
+                            <c:when test="${u.role.roleName == 'ADMIN'}"><span class="badge bg-danger">ADMIN</span></c:when>
+                            <c:when test="${u.role.roleName == 'MASTER'}"><span class="badge bg-primary">MASTER</span></c:when>
                             <c:otherwise><span class="badge bg-secondary">STAFF</span></c:otherwise>
                         </c:choose>
                     </td>
                     <td>
-                        <c:if test="${item.active}"><span class="badge bg-success">Hoạt động</span></c:if>
-                        <c:if test="${!item.active}"><span class="badge bg-secondary">Đã khóa</span></c:if>
+                        <c:if test="${u.active}"><span class="badge bg-success">Hoạt động</span></c:if>
+                        <c:if test="${!u.active}"><span class="badge bg-secondary">Đã khóa</span></c:if>
                     </td>
                     <td>
-                        <a href="${pageContext.request.contextPath}/admin/user/edit?id=${item.userId}" class="btn btn-sm btn-primary">Sửa</a>
-                        <c:if test="${item.active}">
-                            <a href="${pageContext.request.contextPath}/admin/user/delete?id=${item.userId}" class="btn btn-sm btn-danger" onclick="return confirm('Khóa tài khoản này?')">Khóa</a>
+                        <a href="${pageContext.request.contextPath}/admin/user/edit?id=${u.userId}" class="btn btn-sm btn-primary">Sửa</a>
+                        <c:if test="${u.active}">
+                            <a href="${pageContext.request.contextPath}/admin/user/delete?id=${u.userId}" class="btn btn-sm btn-danger" onclick="return confirm('Khóa tài khoản này?')">Khóa</a>
                         </c:if>
+                        <a href="${pageContext.request.contextPath}/admin/user/reset-password?id=${item.userId}"
+                           class="btn btn-sm btn-warning"
+                           onclick="return confirm('Bạn có chắc chắn muốn cấp lại mật khẩu và gửi email cho người này?');">
+                            Reset Pass
+                        </a>
                     </td>
                 </tr>
             </c:forEach>
@@ -120,6 +132,27 @@
             </tbody>
         </table>
     </div>
+    <c:if test="${totalPages > 1}">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+
+                <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="?keyword=${keyword}&page=${currentPage - 1}">Previous</a>
+                </li>
+
+                <c:forEach begin="1" end="${totalPages}" var="i">
+                    <li class="page-item ${currentPage == i ? 'active' : ''}">
+                        <a class="page-link" href="?keyword=${keyword}&page=${i}">${i}</a>
+                    </li>
+                </c:forEach>
+
+                <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="?keyword=${keyword}&page=${currentPage + 1}">Next</a>
+                </li>
+
+            </ul>
+        </nav>
+    </c:if>
 </div>
 
 </body>

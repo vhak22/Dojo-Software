@@ -1,6 +1,7 @@
 package controller.features.common;
 
 import dao.StudentDAO;
+import dao.UserDAO;
 import dao.daoimpl.StudentDAOImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -37,24 +38,30 @@ public class StudentManagementServlet extends HttpServlet {
             req.setAttribute("studentForm", student);
             req.setAttribute("isEdit", true);
             req.getRequestDispatcher("/views/admin/students/student-form.jsp").forward(req, resp);
-        } else if (path.contains("create")) {
+        }
+        else if (path.contains("create")) {
             req.setAttribute("studentForm", new Student());
             req.setAttribute("isEdit", false);
             req.getRequestDispatcher("/views/admin/students/student-form.jsp").forward(req, resp);
-        } else if (path.contains("delete")) {
+        }
+        else if (path.contains("delete")) {
             deleteStudent(req, resp);
-        } else {
+        }
+        else {
             List<Student> list;
             if ("ADMIN".equals(roleName)) {
-                list = studentDAO.findAll();
-            } else if ("MASTER".equals(roleName)) {
+                utils.PaginationUtil.paginate(req, studentDAO, 20);
+            }
+            else if ("MASTER".equals(roleName)) {
                 // Cần viết thêm hàm findByMasterId trong DAO
                 // Logic: Tìm student có Enrollment thuộc Dojo mà Master này quản lý
-                list = studentDAO.findByMasterId(currentUser.getUserId());
-            } else {
-                list = new ArrayList<>(); // Staff logic tùy chỉnh
+//                list = studentDAO.findByMasterId(currentUser.getUserId());
+                utils.PaginationUtil.paginate(req, studentDAO, 10);
             }
-            req.setAttribute("items", list);
+            else {
+                utils.PaginationUtil.paginate(req, studentDAO, 5);
+            }
+            utils.PaginationUtil.paginate(req, studentDAO, 4);
             req.getRequestDispatcher("/views/admin/students/student-list.jsp").forward(req, resp);
         }
     }
@@ -124,5 +131,38 @@ public class StudentManagementServlet extends HttpServlet {
         } catch (Exception e) {
             resp.sendRedirect(req.getContextPath() + "/students?error=delete_fail");
         }
+    }
+    private void handlePagination(HttpServletRequest request, UserDAO dao) {
+        // 1. Lấy tham số keyword
+        String keyword = request.getParameter("keyword");
+        if (keyword == null) {
+            keyword = "";
+        }
+
+        // 2. Xử lý số trang hiện tại (mặc định là 1)
+        int currentPage = 1;
+        String pageStr = request.getParameter("page");
+        try {
+            if (pageStr != null && !pageStr.isEmpty()) {
+                currentPage = Integer.parseInt(pageStr);
+            }
+        } catch (NumberFormatException e) {
+            currentPage = 1;
+        }
+
+        int pageSize = 10;
+
+        // 4. Gọi DAO để lấy dữ liệu
+        List<User> list = dao.searchAndPaginate(keyword, currentPage, pageSize);
+        long totalCount = dao.getTotalCount(keyword);
+
+        // 5. Tính tổng số trang
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+
+        // 6. Đẩy tất cả vào request attribute
+        request.setAttribute("userList", list);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("keyword", keyword);
     }
 }

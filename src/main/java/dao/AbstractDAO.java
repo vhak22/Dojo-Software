@@ -93,4 +93,52 @@ public abstract class AbstractDAO<T, K> implements CrudDAO<T, K> {
         }
     }
 
+
+
+    /**
+     * Hàm Helper nội bộ: Tự động sinh ra câu lệnh JPQL tìm kiếm dựa trên danh sách các cột truyền vào
+     */
+    protected List<T> searchWithFields(String keyword, int page, int pageSize, String... searchFields) {
+        jakarta.persistence.EntityManager em = utils.XJPA.getEntityManager();
+        try {
+            StringBuilder jpql = new StringBuilder("SELECT obj FROM " + entityClass.getSimpleName() + " obj");
+            if (keyword != null && !keyword.trim().isEmpty() && searchFields.length > 0) {
+                jpql.append(" WHERE ");
+                for (int i = 0; i < searchFields.length; i++) {
+                    jpql.append("obj.").append(searchFields[i]).append(" LIKE :kw");
+                    if (i < searchFields.length - 1) jpql.append(" OR ");
+                }
+            }
+            jakarta.persistence.TypedQuery<T> query = em.createQuery(jpql.toString(), entityClass);
+            if (keyword != null && !keyword.trim().isEmpty() && searchFields.length > 0) {
+                query.setParameter("kw", "%" + keyword + "%");
+            }
+            query.setFirstResult((page - 1) * pageSize);
+            query.setMaxResults(pageSize);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    protected long countWithFields(String keyword, String... searchFields) {
+        jakarta.persistence.EntityManager em = utils.XJPA.getEntityManager();
+        try {
+            StringBuilder jpql = new StringBuilder("SELECT COUNT(obj) FROM " + entityClass.getSimpleName() + " obj");
+            if (keyword != null && !keyword.trim().isEmpty() && searchFields.length > 0) {
+                jpql.append(" WHERE ");
+                for (int i = 0; i < searchFields.length; i++) {
+                    jpql.append("obj.").append(searchFields[i]).append(" LIKE :kw");
+                    if (i < searchFields.length - 1) jpql.append(" OR ");
+                }
+            }
+            jakarta.persistence.TypedQuery<Long> query = em.createQuery(jpql.toString(), Long.class);
+            if (keyword != null && !keyword.trim().isEmpty() && searchFields.length > 0) {
+                query.setParameter("kw", "%" + keyword + "%");
+            }
+            return query.getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
 }

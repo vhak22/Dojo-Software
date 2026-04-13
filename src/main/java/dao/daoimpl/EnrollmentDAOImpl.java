@@ -37,4 +37,14 @@ public class EnrollmentDAOImpl extends AbstractDAO<Enrollment, Integer> implemen
             em.close();
         }
     }
+
+    @Override
+    public List<Enrollment> searchAndPaginate(String keyword, int page, int pageSize) {
+        return List.of();
+    }
+
+    @Override
+    public long getTotalCount(String keyword) {
+        return 0;
+    }
 }

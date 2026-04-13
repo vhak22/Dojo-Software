@@ -51,4 +51,13 @@ public class StudentDAOImpl extends AbstractDAO<Student, String> implements Stud
             em.close();
         }
     }
+    @Override
+    public List<Student> searchAndPaginate(String keyword, int page, int pageSize) {
+        return super.searchWithFields(keyword, page, pageSize, "id", "fullName", "rank");
+    }
+
+    @Override
+    public long getTotalCount(String keyword) {
+        return super.countWithFields(keyword, "id", "fullName", "rank");
+    }
 }

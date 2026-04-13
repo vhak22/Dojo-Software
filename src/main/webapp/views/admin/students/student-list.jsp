@@ -42,6 +42,14 @@
 
 <div class="main-content">
     <h2 class="text-white mb-4" style="font-family: 'Oswald', sans-serif;">QUẢN LÝ MÔN SINH</h2>
+
+    <form action="${pageContext.request.contextPath}/students" method="GET" class="form-inline mb-3">
+        <div class="input-group">
+            <input type="text" name="keyword" class="form-control" value="${keyword}" placeholder="Tìm mã, tên, email...">
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        </div>
+    </form>
+
     <a href="${pageContext.request.contextPath}/student/create" class="btn btn-success mb-3">
         <i class="fa-solid fa-plus"></i> Thêm Môn Sinh Mới
     </a>
@@ -59,21 +67,42 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach var="item" items="${items}">
+            <c:forEach var="st" items="${items}">
                 <tr>
-                    <td>${item.studentId}</td>
-                    <td>${item.fullName}</td>
-                    <td><span class="badge bg-info text-dark">${item.rank}</span></td>
-                    <td>${item.phone}</td>
-                    <td>${item.gender ? 'Nam' : 'Nữ'}</td> <td>
-                    <a href="${pageContext.request.contextPath}/student/edit?id=${item.studentId}" class="btn btn-sm btn-primary">Sửa</a>
-                    <a href="${pageContext.request.contextPath}/student/delete?id=${item.studentId}" class="btn btn-sm btn-danger" onclick="return confirm('Xóa môn sinh này?')">Xóa</a>
+                    <td>${st.studentId}</td>
+                    <td>${st.fullName}</td>
+                    <td><span class="badge bg-info text-dark">${st.rank}</span></td>
+                    <td>${st.phone}</td>
+                    <td>${st.gender ? 'Nam' : 'Nữ'}</td> <td>
+                    <a href="${pageContext.request.contextPath}/student/edit?id=${st.studentId}" class="btn btn-sm btn-primary">Sửa</a>
+                    <a href="${pageContext.request.contextPath}/student/delete?id=${st.studentId}" class="btn btn-sm btn-danger" onclick="return confirm('Xóa môn sinh này?')">Xóa</a>
                 </td>
                 </tr>
             </c:forEach>
             </tbody>
         </table>
     </div>
+    <c:if test="${totalPages > 1}">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+
+                <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="?keyword=${keyword}&page=${currentPage - 1}">Previous</a>
+                </li>
+
+                <c:forEach begin="1" end="${totalPages}" var="i">
+                    <li class="page-item ${currentPage == i ? 'active' : ''}">
+                        <a class="page-link" href="?keyword=${keyword}&page=${i}">${i}</a>
+                    </li>
+                </c:forEach>
+
+                <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="?keyword=${keyword}&page=${currentPage + 1}">Next</a>
+                </li>
+
+            </ul>
+        </nav>
+    </c:if>
 </div>
 
 </body>
