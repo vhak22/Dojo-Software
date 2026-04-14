@@ -42,9 +42,6 @@ public class UserManagementServlet extends HttpServlet {
         else if (path.contains("delete")) {
             deleteUser(req, resp);
         }
-        else if (path.contains("reset-password")) {
-            resetPassword(req, resp);
-        }
         else {
             utils.PaginationUtil.paginate(req, userDAO, 10);
             req.getRequestDispatcher("/views/admin/user/user-list.jsp").forward(req, resp);
@@ -105,39 +102,6 @@ public class UserManagementServlet extends HttpServlet {
         }
     }
 
-    private void resetPassword(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String id = req.getParameter("id");
-        try {
-            User user = userDAO.findById(id);
-            if (user != null && user.getEmail() != null) {
-
-                // 1. Random mật khẩu mới (Lấy 8 ký tự đầu)
-                String newPass = java.util.UUID.randomUUID().toString().substring(0, 8);
-
-                // 2. Lưu vào CSDL
-                user.setPassword(newPass);
-                userDAO.update(user);
-
-                // 3. Gửi Email
-                String subject = "Cap lai mat khau phan mem Dojo";
-                String body = "Xin chao " + user.getFullname() + ",\n\n"
-                        + "Mat khau moi cua ban la: " + newPass + "\n"
-                        + "Vui long dang nhap va doi mat khau ngay!";
-
-                utils.EmailUtil.sendEmail(user.getEmail(), subject, body);
-
-                // 4. Báo thành công
-                resp.sendRedirect(req.getContextPath() + "/admin/users?message=Da gui email mat khau moi!");
-            }
-            //            } else {
-//
-//                resp.sendRedirect(req.getContextPath() + "/admin/users?error=User khong ton tai hoac khong co email");
-//            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            resp.sendRedirect(req.getContextPath() + "/admin/users?error=Loi gui email");
-        }
-    }
     private void deleteUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             String id = req.getParameter("id");

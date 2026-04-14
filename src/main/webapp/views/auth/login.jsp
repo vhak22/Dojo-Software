@@ -152,6 +152,9 @@
             <label for="password" class="form-label text-white-50">Mật khẩu</label>
             <input type="password" class="form-control" id="password" name="password"
                    placeholder="Nhập mật khẩu" required>
+            <div class="text-end mt-1">
+                <a href="${pageContext.request.contextPath}/forgot-password" class="small text-decoration-none">Quên mật khẩu?</a>
+            </div>
         </div>
 
         <button type="submit" class="btn btn-custom">Truy cập hệ thống</button>

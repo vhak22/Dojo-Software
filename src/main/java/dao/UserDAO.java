@@ -13,4 +13,5 @@ public interface UserDAO extends CrudDAO<User, String> {
     List<User> searchAndPaginate(String keyword, int page, int pageSize);
 
     long getTotalCount(String keyword);
+    User findByEmail(String email);
 }
