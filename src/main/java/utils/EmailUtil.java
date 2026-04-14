@@ -36,12 +36,11 @@ public class EmailUtil {
 
         try {
             // 4. Soạn tin nhắn
-            Message message = new MimeMessage(session);
+            MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(fromEmail));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-            message.setSubject(subject);
-            message.setText(body);
-
+            message.setSubject(subject, "UTF-8");
+            message.setContent(body, "text/plain; charset=UTF-8");
             // 5. Gửi
             Transport.send(message);
             System.out.println("Gửi email thành công tới: " + toEmail);

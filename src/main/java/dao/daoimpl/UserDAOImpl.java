@@ -51,4 +51,19 @@ public class UserDAOImpl extends AbstractDAO<User, String> implements UserDAO {
     public long getTotalCount(String keyword) {
         return super.countWithFields(keyword, "userId", "fullname", "email");
     }
+
+    @Override
+    public User findByEmail(String email) {
+        EntityManager em = XJPA.getEntityManager();
+        try {
+            String jpql = "SELECT u FROM User u WHERE u.email = :emailParam";
+            TypedQuery<User> query = em.createQuery(jpql, User.class);
+            query.setParameter("emailParam", email);
+            return query.getSingleResult(); // Sẽ ném NoResultException nếu không tìm thấy
+        } catch (Exception e) {
+            return null; // Trả về null nếu không có user nào khớp email
+        } finally {
+            em.close();
+        }
+    }
 }

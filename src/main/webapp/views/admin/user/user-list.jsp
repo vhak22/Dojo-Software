@@ -116,11 +116,6 @@
                         <c:if test="${u.active}">
                             <a href="${pageContext.request.contextPath}/admin/user/delete?id=${u.userId}" class="btn btn-sm btn-danger" onclick="return confirm('Khóa tài khoản này?')">Khóa</a>
                         </c:if>
-                        <a href="${pageContext.request.contextPath}/admin/user/reset-password?id=${item.userId}"
-                           class="btn btn-sm btn-warning"
-                           onclick="return confirm('Bạn có chắc chắn muốn cấp lại mật khẩu và gửi email cho người này?');">
-                            Reset Pass
-                        </a>
                     </td>
                 </tr>
             </c:forEach>

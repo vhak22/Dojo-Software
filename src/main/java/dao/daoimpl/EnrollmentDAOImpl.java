@@ -40,7 +40,7 @@ public class EnrollmentDAOImpl extends AbstractDAO<Enrollment, Integer> implemen
 
     @Override
     public List<Enrollment> searchAndPaginate(String keyword, int page, int pageSize) {
-        return List.of();
+        return super.searchWithFields(keyword, page, pageSize, "id", "student", "dojo", "status");
     }
 
     @Override
