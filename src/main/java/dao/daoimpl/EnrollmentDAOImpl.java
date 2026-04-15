@@ -45,6 +45,6 @@ public class EnrollmentDAOImpl extends AbstractDAO<Enrollment, Integer> implemen
 
     @Override
     public long getTotalCount(String keyword) {
-        return 0;
+        return super.countWithFields(keyword, "id", "student", "dojo", "status");
     }
 }

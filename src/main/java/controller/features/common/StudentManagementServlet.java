@@ -132,37 +132,5 @@ public class StudentManagementServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/students?error=delete_fail");
         }
     }
-    private void handlePagination(HttpServletRequest request, UserDAO dao) {
-        // 1. Lấy tham số keyword
-        String keyword = request.getParameter("keyword");
-        if (keyword == null) {
-            keyword = "";
-        }
 
-        // 2. Xử lý số trang hiện tại (mặc định là 1)
-        int currentPage = 1;
-        String pageStr = request.getParameter("page");
-        try {
-            if (pageStr != null && !pageStr.isEmpty()) {
-                currentPage = Integer.parseInt(pageStr);
-            }
-        } catch (NumberFormatException e) {
-            currentPage = 1;
-        }
-
-        int pageSize = 10;
-
-        // 4. Gọi DAO để lấy dữ liệu
-        List<User> list = dao.searchAndPaginate(keyword, currentPage, pageSize);
-        long totalCount = dao.getTotalCount(keyword);
-
-        // 5. Tính tổng số trang
-        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
-
-        // 6. Đẩy tất cả vào request attribute
-        request.setAttribute("userList", list);
-        request.setAttribute("currentPage", currentPage);
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("keyword", keyword);
-    }
 }

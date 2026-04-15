@@ -72,9 +72,9 @@ public class EnrollmentManagementServlet extends HttpServlet {
 
     private void listEnrollments(HttpServletRequest req, HttpServletResponse resp, String rolePath) throws ServletException, IOException {
         // Lấy tất cả danh sách enrollment
-        // Lưu ý: Nếu là Master/Staff, bạn có thể muốn lọc danh sách này chỉ hiển thị Dojo của họ
+        // Lưu ý: Nếu là Master/Staff, lọc danh sách này chỉ hiển thị Dojo của họ
         // Ví dụ: if (rolePath.equals("master")) items = enrollmentDAO.findByMaster(userId);
-        // Ở đây mình lấy tất cả cho đơn giản:
+        // Ở đây lấy tất cả cho đơn giản:
         List<Enrollment> items = enrollmentDAO.findAll();
 
         req.setAttribute("enrollments", items);
