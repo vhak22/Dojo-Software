@@ -117,7 +117,7 @@
             </thead>
             <tbody>
             <c:forEach var="en" items="${enrollments}">
-                <tr>
+                <tr class="${en.status == 'DROPPED' ? 'opacity-50' : ''}">
                     <td>${en.id}</td>
 
                     <td>
@@ -158,6 +158,15 @@
             </c:forEach>
             </tbody>
         </table>
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mt-3">
+                <c:forEach begin="1" end="${totalPages}" var="i">
+                    <li class="page-item ${i == currentPage ? 'active' : ''}">
+                        <a class="page-link" href="?page=${i}">${i}</a>
+                    </li>
+                </c:forEach>
+            </ul>
+        </nav>
     </div>
 </div>
 </body>
