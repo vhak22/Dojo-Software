@@ -15,6 +15,7 @@ import model.Dojo;
 import model.Enrollment;
 import model.Student;
 import model.User;
+import utils.PaginationUtil;
 import utils.ParamUtil;
 
 import java.io.IOException;
@@ -50,7 +51,7 @@ public class EnrollmentManagementServlet extends HttpServlet {
         } else if (uri.contains("update") || uri.contains("edit")) { // Hỗ trợ cả /edit và /update
             showForm(req, resp, rolePath);
         } else if (uri.contains("delete")) {
-            deleteEnrollment(req, resp, rolePath);
+            cancelEnrollment(req, resp, rolePath);
         } else {
             listEnrollments(req, resp, rolePath);
         }
@@ -75,9 +76,9 @@ public class EnrollmentManagementServlet extends HttpServlet {
         // Lưu ý: Nếu là Master/Staff, lọc danh sách này chỉ hiển thị Dojo của họ
         // Ví dụ: if (rolePath.equals("master")) items = enrollmentDAO.findByMaster(userId);
         // Ở đây lấy tất cả cho đơn giản:
-        List<Enrollment> items = enrollmentDAO.findAll();
+        PaginationUtil.paginate(req, enrollmentDAO, 10);
 
-        req.setAttribute("enrollments", items);
+        req.setAttribute("enrollments", req.getAttribute("items"));
 
         // Forward về file jsp list tương ứng, ví dụ: /views/admin/enrollment/enrollment-list.jsp
         // Giả sử bạn để chung view hoặc copy ra từng folder
@@ -167,14 +168,19 @@ public class EnrollmentManagementServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/" + rolePath + "/enrollments");
     }
 
-    private void deleteEnrollment(HttpServletRequest req, HttpServletResponse resp, String rolePath) throws IOException {
+    private void cancelEnrollment(HttpServletRequest req, HttpServletResponse resp, String rolePath) throws IOException {
         Integer id = ParamUtil.getInt(req, "id", null);
         if (id != null) {
             try {
-                enrollmentDAO.deleteById(id);
-                req.getSession().setAttribute("message", "Đã xóa bản ghi danh!");
+                Enrollment enrollment = enrollmentDAO.findById(id);
+                if (enrollment != null) {
+                    // Chuyển trạng thái sang đã hủy/nghỉ
+                    enrollment.setStatus(Enrollment.EnrollmentStatus.DROPPED);
+                    enrollmentDAO.update(enrollment);
+                    req.getSession().setAttribute("message", "Đã hủy ghi danh thành công!");
+                }
             } catch (Exception e) {
-                req.getSession().setAttribute("error", "Xóa thất bại: " + e.getMessage());
+                req.getSession().setAttribute("error", "Hủy thất bại: " + e.getMessage());
             }
         }
         resp.sendRedirect(req.getContextPath() + "/" + rolePath + "/enrollments");

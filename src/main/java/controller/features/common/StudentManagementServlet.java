@@ -61,7 +61,7 @@ public class StudentManagementServlet extends HttpServlet {
             else {
                 utils.PaginationUtil.paginate(req, studentDAO, 5);
             }
-            utils.PaginationUtil.paginate(req, studentDAO, 4);
+
             req.getRequestDispatcher("/views/admin/students/student-list.jsp").forward(req, resp);
         }
     }
